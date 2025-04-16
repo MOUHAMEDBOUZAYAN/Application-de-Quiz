@@ -1,105 +1,126 @@
-import { useState, KeyboardEvent } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import useLocalStorage from '../hooks/useLocalStorage';
+import { FiUser, FiArrowRight, FiAward, FiClock, FiHelpCircle } from 'react-icons/fi';
 
 export default function Home() {
-  const [name, setName] = useState<string>('');
+  const [name, setName] = useState('');
+  const [, setStoredName] = useLocalStorage('quizUserName', '');
   const navigate = useNavigate();
 
-  const handleStartQuiz = (): void => {
-    if (name.trim()) {
-      localStorage.setItem('playerName', name);
-      navigate('/quiz');
-    }
-  };
-
-  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>): void => {
-    if (e.key === 'Enter') {
-      handleStartQuiz();
-    }
+  const handleStartQuiz = () => {
+    if (!name.trim()) return;
+    setStoredName(name);
+    navigate('/quiz');
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-500 flex flex-col items-center justify-center p-6">
-      <div className="w-full max-w-lg bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl">
-        <div className="p-8 space-y-6">
-          <div className="text-center">
-            <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-r from-indigo-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-              </svg>
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Background image with overlay */}
+      <div className="absolute inset-0 z-0">
+        <img
+          src="https://images.unsplash.com/photo-1639762681057-408e52192e55?q=80&w=2232&auto=format&fit=crop"
+          alt="Background"
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/70 to-purple-900/70"></div>
+      </div>
+
+      {/* Floating decorative elements */}
+      <div className="absolute top-20 left-10 w-16 h-16 rounded-full bg-indigo-400/20 blur-xl"></div>
+      <div className="absolute bottom-1/4 right-20 w-24 h-24 rounded-full bg-purple-400/20 blur-xl"></div>
+      <div className="absolute top-1/3 right-1/4 w-12 h-12 rounded-full bg-white/10 blur-lg"></div>
+
+      {/* Main content */}
+      <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
+        <div className="w-full max-w-md bg-white/90 backdrop-blur-sm rounded-xl shadow-2xl overflow-hidden border border-white/20">
+          {/* Header with gradient */}
+          <div className="bg-gradient-to-r from-indigo-500 to-purple-600 p-6 text-center relative">
+            <div className="absolute -top-6 -right-6 w-16 h-16 bg-yellow-400 rounded-full flex items-center justify-center shadow-lg">
+              <FiAward className="text-white text-2xl" />
             </div>
-            <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-pink-600 mb-2">
-              Quiz Challenge
-            </h1>
-            <p className="text-gray-600 font-medium">Testez vos connaissances dès maintenant !</p>
+            <h1 className="text-3xl font-bold text-white">Quiz Challenge</h1>
+            <p className="text-indigo-100 mt-2">Prove your knowledge!</p>
           </div>
 
-          <div className="space-y-6">
-            <div>
-              <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">
-                VOTRE NOM
+          {/* Content */}
+          <div className="p-8">
+            <div className="mb-6">
+              <label htmlFor="name" className="block text-gray-700 font-medium mb-2 flex items-center">
+                <FiUser className="mr-2" />
+                Enter Your Name
               </label>
               <div className="relative">
                 <input
                   id="name"
                   type="text"
-                  placeholder="Votre prénom"
-                  className="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-indigo-200 focus:border-indigo-500 transition-all duration-200 placeholder-gray-400"
+                  placeholder="Your name here"
+                  className="w-full px-4 py-3 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all bg-white/70"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  aria-label="Entrez votre nom pour commencer le quiz"
+                  onKeyPress={(e) => e.key === 'Enter' && handleStartQuiz()}
                 />
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                  </svg>
-                </div>
+                <FiUser className="absolute left-3 top-3.5 text-gray-500" />
               </div>
             </div>
 
             <button
               onClick={handleStartQuiz}
               disabled={!name.trim()}
-              className={`w-full py-4 px-6 rounded-xl font-bold text-white transition-all duration-300 flex items-center justify-center gap-2 ${
+              className={`w-full flex items-center justify-center py-3 px-6 rounded-lg font-medium text-white transition-all transform hover:scale-[1.02] ${
                 name.trim()
-                  ? 'bg-gradient-to-r from-indigo-600 to-pink-600 hover:from-indigo-700 hover:to-pink-700 shadow-lg hover:shadow-xl hover:scale-[1.02]'
-                  : 'bg-gray-400 cursor-not-allowed'
+                  ? 'bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 shadow-md hover:shadow-lg'
+                  : 'bg-gray-300 cursor-not-allowed'
               }`}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
-              </svg>
-              COMMENCER LE QUIZ
+              Start Challenge
+              <FiArrowRight className="ml-2 transition-transform group-hover:translate-x-1" />
             </button>
+
+            {/* Additional info cards */}
+            <div className="mt-8 grid grid-cols-2 gap-4">
+              <div className="bg-indigo-50/70 p-3 rounded-lg border border-indigo-100 flex items-start">
+                <FiClock className="text-indigo-500 mt-1 mr-2 flex-shrink-0" />
+                <div>
+                  <h3 className="font-medium text-gray-800">15 min</h3>
+                  <p className="text-xs text-gray-600">Time limit</p>
+                </div>
+              </div>
+              <div className="bg-purple-50/70 p-3 rounded-lg border border-purple-100 flex items-start">
+                <FiHelpCircle className="text-purple-500 mt-1 mr-2 flex-shrink-0" />
+                <div>
+                  <h3 className="font-medium text-gray-800">10 Qs</h3>
+                  <p className="text-xs text-gray-600">Questions</p>
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* Nouveaux éléments sous le bouton */}
-          <div className="pt-4 border-t border-gray-100">
-            <h3 className="text-center font-medium text-gray-700 mb-3">Ce qui vous attend :</h3>
-            <ul className="space-y-3">
-              {[
-                "10 questions variées",
-                "Thèmes multiples au choix",
-                "Score en temps réel",
-                "Correction détaillée",
-                "Classement des meilleurs scores"
-              ].map((item, index) => (
-                <li key={index} className="flex items-start">
-                  <svg className="h-5 w-5 text-indigo-500 mr-2 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span className="text-gray-600">{item}</span>
-                </li>
-              ))}
-            </ul>
+          {/* Footer */}
+          <div className="bg-gray-50/50 px-6 py-4 text-center border-t border-gray-100/50">
+            <p className="text-xs text-gray-600 flex items-center justify-center">
+              <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fillRule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2h-1V9z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              Your progress will be saved automatically
+            </p>
           </div>
         </div>
+      </div>
 
-        <div className="bg-gray-50 px-8 py-4 text-center">
-          <p className="text-sm text-gray-600">
-            © {new Date().getFullYear()} Quiz Master | Conçu pour les passionnés de savoir
-          </p>
+      {/* Floating quiz elements */}
+      <div className="absolute bottom-10 left-10 animate-float">
+        <div className="bg-white/10 p-3 rounded-full border border-white/20 backdrop-blur-sm">
+          <span className="text-white">?</span>
+        </div>
+      </div>
+      <div className="absolute top-20 right-10 animate-float-delay">
+        <div className="bg-indigo-400/20 p-3 rounded-full border border-indigo-300/20 backdrop-blur-sm">
+          <span className="text-white">A</span>
         </div>
       </div>
     </div>
