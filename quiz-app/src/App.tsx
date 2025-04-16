@@ -86,16 +86,17 @@
 // export default FruitList;
 
 
-
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './components/Home';
+import AcceuilPage from './components/Acceuilpage';
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Home />} />
-      </Routes>
+        <Route path="/" element={<AcceuilPage />} />
+        <Route path="/home" element={<Home />} />
+      </Routes> 
     </Router>
   );
 }
