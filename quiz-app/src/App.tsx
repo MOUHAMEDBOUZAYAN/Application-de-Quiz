@@ -88,7 +88,7 @@
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './components/Home';
-import AcceuilPage from './components/Acceuilpage';
+import AcceuilPage from './components/AcceuilPage';
 
 function App() {
   return (
