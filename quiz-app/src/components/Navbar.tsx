@@ -3,7 +3,7 @@ import useLocalStorage from '../hooks/useLocalStorage';
 import { FaHome, FaQuestionCircle, FaChartBar, FaCog, FaSignOutAlt } from 'react-icons/fa';
 
 export default function Navbar() {
-  const [name, , removeName] = useLocalStorage('quizUserName', '');
+  const [name, setName, removeName] = useLocalStorage('quizUserName', '');
   const location = useLocation();
 
   const handleLogout = () => {
@@ -56,6 +56,16 @@ export default function Navbar() {
                     }`}
                   >
                     <FaChartBar className="mr-1" /> Résultats
+                  </Link>
+                  <Link
+                    to="/settings"
+                    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
+                      isActive('/settings')
+                        ? 'border-indigo-500 text-gray-900'
+                        : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                    }`}
+                  >
+                    <FaCog className="mr-1" /> Paramètres
                   </Link>
                 </>
               )}
@@ -164,6 +174,16 @@ export default function Navbar() {
                 }`}
               >
                 <FaChartBar className="inline mr-2" /> Résultats
+              </Link>
+              <Link
+                to="/settings"
+                className={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${
+                  isActive('/settings')
+                    ? 'bg-indigo-50 border-indigo-500 text-indigo-700'
+                    : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
+                }`}
+              >
+                <FaCog className="inline mr-2" /> Paramètres
               </Link>
             </>
           )}

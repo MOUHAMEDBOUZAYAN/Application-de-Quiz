@@ -4,31 +4,31 @@ import HeroSection from './pages/AcceuilPage';
 import Home from './pages/Home';
 import Quiz from './components/Quiz';
 import Results from './pages/Results';
-import Footer from './components/Footer'; // Import du nouveau composant Footer
+import Footer from './components/Footer';
+import Navbar from './components/Navbar'; // Import du nouveau composant Footer
 
 import './App.css';
 
 function App() {
   return (
     <Router>
-      
-        <div className="flex flex-col min-h-screen">
-          <Routes>
-            <Route path="/" element={<HeroSection />} />
-            <Route element={<Layout />}>
-              <Route path="/home" element={<Home />} />
-              <Route path="/quiz" element={<Quiz />} />
-              <Route path="/results" element={<Results />} />
-            </Route>
-            {/* Route pour les pages non trouvées */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <Footer /> {/* Footer ajouté ici */}
-        </div>
-      
+      <div className="flex flex-col min-h-screen">
+        <Navbar /> 
+        <Routes>
+          <Route path="/" element={<HeroSection />} />
+          <Route element={<Layout />}>
+            <Route path="/home" element={<Home />} />
+            <Route path="/quiz" element={<Quiz />} />
+            <Route path="/results" element={<Results />} />
+          </Route>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+        <Footer />
+      </div>
     </Router>
   );
 }
+
 
 // Composant pour la page 404
 function NotFound() {
