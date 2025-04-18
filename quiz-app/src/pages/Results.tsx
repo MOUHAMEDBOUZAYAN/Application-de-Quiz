@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { FiHome, FiRepeat } from 'react-icons/fi';
+import { FaMedal, FaUserGraduate } from 'react-icons/fa';
 
 export default function Results() {
   const location = useLocation();
@@ -17,40 +18,44 @@ export default function Results() {
   };
 
   const getResultMessage = () => {
-    if (percentage >= 90) return 'Exceptional! You nailed it!';
-    if (percentage >= 70) return 'Great job! You know your stuff.';
-    if (percentage >= 50) return 'Good effort! Keep learning.';
-    if (percentage >= 30) return 'Keep practicing!';
-    return 'Don\'t worry, try again!';
+    if (percentage >= 90) return '🏆 Exceptional! You nailed it!';
+    if (percentage >= 70) return '⭐ Great job! You know your stuff.';
+    if (percentage >= 50) return '💡 Good effort! Keep learning.';
+    if (percentage >= 30) return '🧠 Keep practicing!';
+    return '🔄 Don’t worry, try again!';
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-64px)] p-4 bg-gradient-to-br from-indigo-50 to-purple-50">
-      <div className="w-full max-w-md bg-white rounded-xl shadow-xl overflow-hidden border border-gray-100">
+    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-64px)] px-4 py-8 bg-gradient-to-br from-indigo-100 to-purple-200">
+      <div className="w-full max-w-xl bg-gradient-to-br from-white/80 to-white/60 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
         {/* Header */}
         <div className={`bg-gradient-to-r ${getResultColor()} p-6 text-center relative`}>
-          <h1 className="text-3xl font-bold text-white">Quiz Results</h1>
+          <div className="absolute -top-5 left-1/2 -translate-x-1/2 text-white text-4xl drop-shadow-lg">
+            <FaMedal />
+          </div>
+          <h1 className="text-3xl font-extrabold text-white tracking-wide pt-4">Quiz Results</h1>
         </div>
 
         {/* Content */}
         <div className="p-8">
           <div className="text-center mb-6">
-            <p className="text-xl text-gray-700 mb-2">
-              {name}, you scored <span className="font-bold">{score}</span> out of <span className="font-bold">{total}</span>
+            <p className="text-xl text-gray-800 mb-2 flex justify-center items-center gap-2">
+              <FaUserGraduate className="text-indigo-500" />
+              <span className="font-medium">{name}</span>, you scored <span className="font-bold">{score}</span> out of <span className="font-bold">{total}</span>
             </p>
-            <p className="text-4xl font-bold mb-2">{percentage}%</p>
-            <p className={`text-lg font-medium ${
-              percentage >= 80 ? 'text-green-600' :
-              percentage >= 50 ? 'text-yellow-600' : 'text-red-600'
+            <p className="text-5xl font-bold mb-2 text-indigo-600">{percentage}%</p>
+            <p className={`text-lg font-semibold ${
+              percentage >= 80 ? 'text-green-700' :
+              percentage >= 50 ? 'text-yellow-700' : 'text-red-600'
             }`}>
               {getResultMessage()}
             </p>
           </div>
 
           {/* Progress bar */}
-          <div className="w-full bg-gray-200 rounded-full h-4 mb-8">
+          <div className="w-full bg-gray-300 rounded-full h-5 mb-8 overflow-hidden shadow-inner">
             <div
-              className={`h-4 rounded-full bg-gradient-to-r ${getResultColor()}`}
+              className={`h-full rounded-full bg-gradient-to-r ${getResultColor()} transition-all duration-500`}
               style={{ width: `${percentage}%` }}
             ></div>
           </div>
@@ -59,15 +64,15 @@ export default function Results() {
           <div className="flex flex-col sm:flex-row gap-4">
             <button
               onClick={() => navigate('/')}
-              className="flex-1 flex items-center justify-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors"
+              className="flex-1 flex items-center justify-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition"
             >
-              <FiHome /> Home
+              <FiHome className="text-lg" /> Home
             </button>
             <button
               onClick={() => navigate('/quiz')}
-              className="flex-1 flex items-center justify-center gap-2 bg-white border border-indigo-600 text-indigo-600 px-6 py-3 rounded-lg hover:bg-indigo-50 transition-colors"
+              className="flex-1 flex items-center justify-center gap-2 bg-white border border-indigo-600 text-indigo-600 px-6 py-3 rounded-lg hover:bg-indigo-50 transition"
             >
-              <FiRepeat /> Try Again
+              <FiRepeat className="text-lg" /> Try Again
             </button>
           </div>
         </div>
