@@ -1,9 +1,9 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Home from './components/Home';
+import Home from './pages/Home';
 import Quiz from './components/Quiz';
-import Results from './components/Results';
+import Results from './pages/Results';
 import Layout from './components/Layout';
-import AcceuilPage from './components/AcceuilPage';
+import AcceuilPage from './pages/AcceuilPage';
 
 function App() {
   return (
