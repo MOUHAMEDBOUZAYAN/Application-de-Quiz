@@ -1,22 +1,23 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Layout from './components/Layout';
+import HeroSection from './pages/AcceuilPage';
 import Home from './pages/Home';
 import Quiz from './components/Quiz';
 import Results from './pages/Results';
-import Layout from './components/Layout';
-import AcceuilPage from './pages/AcceuilPage';
+import './App.css';
 
 function App() {
   return (
-    <BrowserRouter>
+    <Router>
       <Routes>
-      <Route path="/" element={<AcceuilPage />} />
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="quiz" element={<Quiz />} />
-          <Route path="results" element={<Results />} />
+        <Route path="/" element={<HeroSection />} />
+        <Route element={<Layout />}>
+          <Route path="/home" element={<Home />} />
+          <Route path="/quiz" element={<Quiz />} />
+          <Route path="/results" element={<Results />} />
         </Route>
       </Routes>
-    </BrowserRouter>
+    </Router>
   );
 }
 
