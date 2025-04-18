@@ -5,20 +5,23 @@ import Home from './pages/Home';
 import Quiz from './components/Quiz';
 import Results from './pages/Results';
 import Footer from './components/Footer';
-import Navbar from './components/Navbar'; // Import du nouveau composant Footer
+import Navbar from './components/Navbar';
+import useLocalStorage from './hooks/useLocalStorage'; // ✅ import local storage hook
 
 import './App.css';
 
 function App() {
+  const [storedName] = useLocalStorage('quizUserName', ''); // ✅ get player name
+
   return (
     <Router>
       <div className="flex flex-col min-h-screen">
-        <Navbar /> 
+        <Navbar />
         <Routes>
           <Route path="/" element={<HeroSection />} />
           <Route element={<Layout />}>
             <Route path="/home" element={<Home />} />
-            <Route path="/quiz" element={<Quiz />} />
+            <Route path="/quiz" element={<QuizWithPlayerName playerName={storedName} />} /> {/* ✅ pass name */}
             <Route path="/results" element={<Results />} />
           </Route>
           <Route path="*" element={<NotFound />} />
@@ -29,8 +32,19 @@ function App() {
   );
 }
 
+// ✅ Wrapper to pass player name to Quiz
+function QuizWithPlayerName({ playerName }: { playerName: string }) {
+  return (
+    <div>
+      <div className="text-right p-4 text-sm text-gray-700">
+        Player: <span className="font-semibold">{playerName || 'Anonymous'}</span>
+      </div>
+      <Quiz />
+    </div>
+  );
+}
 
-// Composant pour la page 404
+// 404 Page
 function NotFound() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
