@@ -1,107 +1,424 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import useLocalStorage from '../hooks/useLocalStorage';
+import { useState, useEffect, useCallback } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import useLocalStorage, { useUserStats, useUserPreferences } from '../hooks/useLocalStorage';
 import Question from './Question';
 import ProgressBar from './ProgressBar';
-import { fetchQuizQuestions } from '../utils/api';
+import { fetchQuizQuestionsWithRetry, QuizParams } from '../utils/api';
 import { QuestionState } from '../types/quizTypes';
-import { FiUser, FiAward } from 'react-icons/fi';
-import { FaBrain } from 'react-icons/fa';
+import { 
+  FiUser, FiAward, FiPause, FiPlay, FiHome, FiSettings,
+  FiVolume2, FiVolumeX, FiRefreshCw, FiEye, FiEyeOff
+} from 'react-icons/fi';
+import { FaBrain, FaLightbulb } from 'react-icons/fa';
+
+interface QuizState {
+  questions: QuestionState[];
+  currentIndex: number;
+  score: number;
+  answers: boolean[];
+  timeSpent: number[];
+  startTime: number;
+  isPaused: boolean;
+  streak: number;
+  maxStreak: number;
+}
+
+interface QuizSettings {
+  difficulty?: 'easy' | 'medium' | 'hard';
+  category?: number;
+  questionCount: number;
+  timeLimit: number;
+}
 
 export default function Quiz() {
-  const [questions, setQuestions] = useState<QuestionState[]>([]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [score, setScore] = useState(0);
+  const [name] = useLocalStorage('quizUserName', '');
+  const { stats, updateStats } = useUserStats();
+  const [preferences] = useUserPreferences();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // État du quiz
+  const [quizState, setQuizState] = useState<QuizState>({
+    questions: [],
+    currentIndex: 0,
+    score: 0,
+    answers: [],
+    timeSpent: [],
+    startTime: Date.now(),
+    isPaused: false,
+    streak: 0,
+    maxStreak: 0,
+  });
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [name] = useLocalStorage('quizUserName', '');
-  const navigate = useNavigate();
+  const [showSettings, setShowSettings] = useState(false);
+  const [soundEnabled, setSoundEnabled] = useState(preferences.soundEnabled);
+  const [hintsEnabled, setHintsEnabled] = useState(preferences.showHints);
 
+  // Paramètres du quiz (peuvent venir des props ou des paramètres par défaut)
+  const quizSettings: QuizSettings = {
+    questionCount: 10,
+    timeLimit: preferences.questionTimeLimit,
+    difficulty: preferences.difficulty,
+    ...location.state // Permet de passer des paramètres via la navigation
+  };
+
+  // Effets sonores
+  const playSound = useCallback((type: 'correct' | 'incorrect' | 'complete') => {
+    if (!soundEnabled) return;
+    
+    const audio = new Audio();
+    switch (type) {
+      case 'correct':
+        audio.src = 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmEcBzuL0fPTgCkFKoHM8dGHNgcZZ7ng5Z1PEAxRo+Dvr2AXBjmM1PLDSjEGHHDF7t2FNgYeab7f5aJSEQxHo+HqsBkGaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmEcBzuL0fPTgCkFKoHM8dGHNgcZZ7ng5Z1PEAxRo+Dvr2AXBjmM1PLDSjEGHHDF7t2FNgYeab7f5aJSEQxHo+HqsBkGamA=';
+        break;
+      case 'incorrect':
+        audio.src = 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmEcBzuL0fPTgCkFKoHM8dGHNgcZZ7ng5Z1PEAxRo+Dvr2AXBjmM1PLDSjEGHHDF7t2FNgYeab7f5aJSEQxHo+HqsBkGaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmEcBzuL0fPTgCkFKoHM8dGHNgcZZ7ng5Z1PEAxRo+Dvr2AXBjmM1PLDSjEGHHDF7t2FNgYeab7f5aJSEQxHo+HqsBkGam=';
+        break;
+      case 'complete':
+        audio.src = 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmEcBzuL0fPTgCkFKoHM8dGHNgcZZ7ng5Z1PEAxRo+Dvr2AXBjmM1PLDSjEGHHDF7t2FNgYeab7f5aJSEQxHo+HqsBkGaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmEcBzuL0fPTgCkFKoHM8dGHNgcZZ7ng5Z1PEAxRo+Dvr2AXBjmM1PLDSjEGHHDF7t2FNgYeab7f5aJSEQxHo+HqsBkGamA=';
+        break;
+    }
+    audio.volume = 0.3;
+    audio.play().catch(() => {}); // Ignorer les erreurs audio
+  }, [soundEnabled]);
+
+  // Redirection si pas de nom d'utilisateur
   useEffect(() => {
-    const getQuestions = async () => {
+    if (!name) {
+      navigate('/');
+    }
+  }, [name, navigate]);
+
+  // Charger les questions au démarrage
+  useEffect(() => {
+    const loadQuestions = async () => {
       try {
-        const data = await fetchQuizQuestions(10);
-        setQuestions(data);
+        setLoading(true);
+        setError('');
+
+        const params: QuizParams = {
+          amount: quizSettings.questionCount,
+          difficulty: quizSettings.difficulty,
+          category: quizSettings.category,
+        };
+
+        const questions = await fetchQuizQuestionsWithRetry(params);
+        
+        setQuizState(prev => ({
+          ...prev,
+          questions,
+          startTime: Date.now(),
+        }));
       } catch (err) {
-        setError('Échec du chargement des questions. Veuillez réessayer.');
+        setError(err instanceof Error ? err.message : 'Erreur lors du chargement des questions');
       } finally {
         setLoading(false);
       }
     };
 
-    getQuestions();
+    loadQuestions();
+  }, [quizSettings.questionCount, quizSettings.difficulty, quizSettings.category]);
+
+  // Gérer la réponse à une question
+  const handleAnswer = useCallback((isCorrect: boolean, timeSpent: number) => {
+    setQuizState(prev => {
+      const newAnswers = [...prev.answers, isCorrect];
+      const newTimeSpent = [...prev.timeSpent, timeSpent];
+      const newScore = isCorrect ? prev.score + 1 : prev.score;
+      const newStreak = isCorrect ? prev.streak + 1 : 0;
+      const newMaxStreak = Math.max(prev.maxStreak, newStreak);
+
+      // Son selon la réponse
+      playSound(isCorrect ? 'correct' : 'incorrect');
+
+      return {
+        ...prev,
+        score: newScore,
+        answers: newAnswers,
+        timeSpent: newTimeSpent,
+        streak: newStreak,
+        maxStreak: newMaxStreak,
+      };
+    });
+
+    // Délai avant de passer à la question suivante ou aux résultats
+    setTimeout(() => {
+      setQuizState(prev => {
+        if (prev.currentIndex < prev.questions.length - 1) {
+          return { ...prev, currentIndex: prev.currentIndex + 1 };
+        } else {
+          // Quiz terminé
+          const totalTime = Math.round((Date.now() - prev.startTime) / 1000);
+          const finalScore = prev.answers.filter(Boolean).length + (isCorrect ? 1 : 0);
+          
+          // Mettre à jour les statistiques
+          updateStats({
+            score: finalScore,
+            totalQuestions: prev.questions.length,
+            category: prev.questions[0]?.category || 'Mixed',
+            completionTime: totalTime,
+          });
+
+          playSound('complete');
+
+          // Naviguer vers les résultats
+          navigate('/results', {
+            state: {
+              score: finalScore,
+              total: prev.questions.length,
+              timeSpent: totalTime,
+              answers: [...prev.answers, isCorrect],
+              questions: prev.questions,
+              streak: prev.maxStreak,
+              averageTime: totalTime / prev.questions.length,
+            }
+          });
+          
+          return prev;
+        }
+      });
+    }, preferences.autoNextQuestion ? 1500 : 2000);
+  }, [playSound, updateStats, navigate, preferences.autoNextQuestion]);
+
+  // Gérer la pause/reprise
+  const togglePause = useCallback(() => {
+    setQuizState(prev => ({
+      ...prev,
+      isPaused: !prev.isPaused
+    }));
   }, []);
 
-  useEffect(() => {
-    if (!name) navigate('/');
-  }, [name]);
-
-  const handleAnswer = (isCorrect: boolean) => {
-    if (isCorrect) setScore(score + 1);
-
-    if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-    } else {
-      navigate('/results', { state: { score: isCorrect ? score + 1 : score, total: questions.length } });
+  // Quitter le quiz
+  const quitQuiz = useCallback(() => {
+    if (window.confirm('Êtes-vous sûr de vouloir quitter le quiz? Votre progression sera perdue.')) {
+      navigate('/');
     }
-  };
+  }, [navigate]);
 
-  if (loading) return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-indigo-50">
-      <div className="text-center p-8 text-indigo-600 text-xl">
-        Chargement des questions...
-      </div>
-    </div>
-  );
+  // Calculer les statistiques en temps réel
+  const currentQuestionNumber = quizState.currentIndex + 1;
+  const totalTimeElapsed = Math.round((Date.now() - quizState.startTime) / 1000);
+  const averageTimePerQuestion = quizState.timeSpent.length > 0 
+    ? quizState.timeSpent.reduce((a, b) => a + b, 0) / quizState.timeSpent.length
+    : 0;
 
-  if (error) return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-indigo-50">
-      <div className="text-center p-8 text-red-500 text-xl">
-        {error}
+  // Rendu des états de chargement et d'erreur
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-indigo-50">
+        <motion.div 
+          className="text-center p-8"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            className="w-16 h-16 border-4 border-indigo-200 border-t-indigo-600 rounded-full mx-auto mb-4"
+          />
+          <p className="text-indigo-600 text-xl font-medium">Chargement des questions...</p>
+          <p className="text-gray-500 text-sm mt-2">Préparation de votre quiz personnalisé</p>
+        </motion.div>
       </div>
-    </div>
-  );
+    );
+  }
 
-  if (!questions.length) return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-indigo-50">
-      <div className="text-center p-8 text-gray-500 text-xl">
-        Aucune question disponible
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-red-50 p-4">
+        <motion.div 
+          className="text-center p-8 bg-white rounded-2xl shadow-xl max-w-md w-full"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <FiRefreshCw className="text-red-600 text-2xl" />
+          </div>
+          <h2 className="text-xl font-bold text-gray-800 mb-2">Erreur de Chargement</h2>
+          <p className="text-red-600 mb-6">{error}</p>
+          <div className="space-y-3">
+            <button
+              onClick={() => window.location.reload()}
+              className="w-full bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors font-medium"
+            >
+              Réessayer
+            </button>
+            <button
+              onClick={() => navigate('/')}
+              className="w-full bg-gray-100 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-200 transition-colors font-medium"
+            >
+              Retour à l'accueil
+            </button>
+          </div>
+        </motion.div>
       </div>
-    </div>
-  );
+    );
+  }
+
+  if (!quizState.questions.length) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-indigo-50">
+        <div className="text-center p-8 text-gray-500 text-xl">
+          Aucune question disponible
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-indigo-50 py-10 px-4 relative overflow-hidden">
-      {/* Background elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 left-10 w-32 h-32 bg-indigo-300/30 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-32 right-10 w-40 h-40 bg-purple-300/20 rounded-full blur-3xl animate-ping"></div>
-        <div className="absolute top-1/3 left-1/4 w-24 h-24 bg-blue-600/10 rounded-full blur-lg"></div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-indigo-50 py-4 px-4 relative overflow-hidden">
+      {/* Éléments de fond animés */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <motion.div 
+          className="absolute top-20 left-10 w-32 h-32 bg-indigo-300/20 rounded-full blur-3xl"
+          animate={{ 
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.5, 0.3]
+          }}
+          transition={{ duration: 4, repeat: Infinity }}
+        />
+        <motion.div 
+          className="absolute bottom-32 right-10 w-40 h-40 bg-purple-300/15 rounded-full blur-3xl"
+          animate={{ 
+            scale: [1.2, 1, 1.2],
+            opacity: [0.2, 0.4, 0.2]
+          }}
+          transition={{ duration: 5, repeat: Infinity }}
+        />
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 w-full max-w-3xl mx-auto bg-white/90 backdrop-blur-md border border-white/20 rounded-xl shadow-lg p-6 sm:p-10 my-10">
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center space-x-3 text-gray-700 font-medium text-lg">
-            <FiUser className="text-indigo-600" />
-            <span>{name}</span>
-          </div>
-          <div className="flex items-center space-x-2 bg-indigo-100 px-4 py-2 rounded-full">
-            <FiAward className="text-indigo-600" />
-            <span className="text-indigo-700 font-semibold">Score: {score}</span>
-          </div>
-        </div>
+      {/* Interface principale */}
+      <div className="relative z-10 w-full max-w-4xl mx-auto">
+        {/* Header avec contrôles */}
+        <motion.div 
+          className="bg-white/90 backdrop-blur-md border border-white/20 rounded-2xl shadow-lg p-4 mb-6"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-3 text-gray-700 font-medium">
+                <div className="w-10 h-10 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
+                  {name.charAt(0).toUpperCase()}
+                </div>
+                <span className="hidden sm:inline">{name}</span>
+              </div>
+              
+              <div className="flex items-center space-x-2 bg-indigo-100 px-3 py-1 rounded-full">
+                <FiAward className="text-indigo-600" />
+                <span className="text-indigo-700 font-semibold text-sm">
+                  {quizState.score}/{currentQuestionNumber - 1}
+                </span>
+              </div>
 
-        <ProgressBar
-          current={currentQuestionIndex + 1}
-          total={questions.length}
-        />
+              {quizState.streak > 0 && (
+                <motion.div 
+                  className="flex items-center space-x-1 bg-yellow-100 px-3 py-1 rounded-full"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  key={quizState.streak}
+                >
+                  <span className="text-yellow-600 text-sm">🔥</span>
+                  <span className="text-yellow-700 font-semibold text-sm">
+                    {quizState.streak}
+                  </span>
+                </motion.div>
+              )}
+            </div>
 
-        <Question
-          question={questions[currentQuestionIndex]}
-          questionNumber={currentQuestionIndex + 1}
-          onAnswer={handleAnswer}
-        />
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => setSoundEnabled(!soundEnabled)}
+                className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
+                title={soundEnabled ? 'Désactiver le son' : 'Activer le son'}
+              >
+                {soundEnabled ? <FiVolume2 className="text-gray-600" /> : <FiVolumeX className="text-gray-400" />}
+              </button>
+
+              <button
+                onClick={() => setHintsEnabled(!hintsEnabled)}
+                className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
+                title={hintsEnabled ? 'Désactiver les indices' : 'Activer les indices'}
+              >
+                {hintsEnabled ? <FiEye className="text-gray-600" /> : <FiEyeOff className="text-gray-400" />}
+              </button>
+
+              <button
+                onClick={togglePause}
+                className="p-2 rounded-lg bg-blue-100 hover:bg-blue-200 transition-colors"
+                title={quizState.isPaused ? 'Reprendre' : 'Mettre en pause'}
+              >
+                {quizState.isPaused ? <FiPlay className="text-blue-600" /> : <FiPause className="text-blue-600" />}
+              </button>
+
+              <button
+                onClick={quitQuiz}
+                className="p-2 rounded-lg bg-red-100 hover:bg-red-200 transition-colors"
+                title="Quitter le quiz"
+              >
+                <FiHome className="text-red-600" />
+              </button>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Contenu principal */}
+        <AnimatePresence mode="wait">
+          {!quizState.isPaused ? (
+            <motion.div
+              key="quiz-content"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="space-y-6"
+            >
+              <ProgressBar
+                current={currentQuestionNumber}
+                total={quizState.questions.length}
+                score={quizState.score}
+                timeElapsed={totalTimeElapsed}
+                averageTimePerQuestion={averageTimePerQuestion}
+                streak={quizState.streak}
+                showDetailedStats={true}
+              />
+
+              <Question
+                question={quizState.questions[quizState.currentIndex]}
+                questionNumber={currentQuestionNumber}
+                totalQuestions={quizState.questions.length}
+                onAnswer={handleAnswer}
+                timeLimit={quizSettings.timeLimit}
+                showHints={hintsEnabled}
+                autoNext={preferences.autoNextQuestion}
+                onTimeUp={() => handleAnswer(false, quizSettings.timeLimit)}
+              />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="paused-content"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="flex items-center justify-center min-h-[400px]"
+            >
+              <div className="text-center bg-white/90 backdrop-blur-md rounded-2xl p-8 shadow-xl">
+                <FiPause className="text-4xl text-blue-600 mx-auto mb-4" />
+                <h2 className="text-2xl font-bold text-gray-800 mb-2">Quiz en Pause</h2>
+                <p className="text-gray-600 mb-6">Prenez votre temps, nous vous attendons!</p>
+                <button
+                  onClick={togglePause}
+                  className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                >
+                  Reprendre le Quiz
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
