@@ -7,6 +7,7 @@ import Results from './pages/Results';
 import Footer from './components/Footer';
 import Navbar from './components/Navbar';
 import useLocalStorage from './hooks/useLocalStorage';
+import { ThemeProvider } from './contexts/ThemeContext';
 import './index.css';
 
 function App() {
@@ -14,21 +15,23 @@ function App() {
 
   return (
     <Router>
-      <div className="flex flex-col min-h-screen bg-gray-50">
-        <Navbar />
-        <main className="flex-grow">
-          <Routes>
-            <Route path="/" element={<HeroSection />} />
-            <Route element={<Layout />}>
-              <Route path="/home" element={<Home />} />
-              <Route path="/quiz" element={<QuizWithPlayerName playerName={storedName} />} />
-              <Route path="/results" element={<Results />} />
-            </Route>
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
+      <ThemeProvider>
+        <div className="flex flex-col min-h-screen bg-gray-50">
+          <Navbar />
+          <main className="flex-grow">
+            <Routes>
+              <Route path="/" element={<HeroSection />} />
+              <Route element={<Layout />}>
+                <Route path="/home" element={<Home />} />
+                <Route path="/quiz" element={<QuizWithPlayerName playerName={storedName} />} />
+                <Route path="/results" element={<Results />} />
+              </Route>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </ThemeProvider>
     </Router>
   );
 }
