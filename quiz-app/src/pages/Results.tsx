@@ -9,7 +9,7 @@ import {
 } from 'react-icons/fi';
 import { 
   FaMedal, FaUserGraduate, FaTrophy, FaFire, 
-  FaGem, FaRocket, FaLightbulb, FaThumbsUp, FaThumbsDown
+  FaGem, FaRocket, FaLightbulb
 } from 'react-icons/fa';
 import { FiZap, FiBarChart2 } from 'react-icons/fi';
 
@@ -28,7 +28,6 @@ interface ResultsState {
 export default function Results() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { resolvedTheme } = useTheme();
   const themeClasses = useThemeClasses();
   const { stats, updateStats } = useUserStats();
   const [name] = useLocalStorage('quizUserName', '');
@@ -41,8 +40,6 @@ export default function Results() {
     score,
     total,
     timeSpent = 0,
-    answers = [],
-    questions = [],
     streak = 0,
     averageTime = 0,
     difficulty = 'mixed',
@@ -78,8 +75,6 @@ export default function Results() {
         title: "Performance Globale",
         data: [
           { label: "Score", value: `${percentage}%`, color: getScoreColor() },
-          { label: "Précision", value: `${score}/${total}`, color: "text-blue-500" },
-          { label: "Temps moyen", value: `${averageTime.toFixed(1)}s`, color: "text-purple-500" },
           { label: "Série max", value: `${streak}`, color: "text-orange-500" }
         ]
       },
@@ -163,7 +158,6 @@ export default function Results() {
   };
 
   const downloadResults = () => {
-    const analysisData = getPerformanceAnalysis();
     const csvContent = [
       ['Métrique', 'Valeur'],
       ['Score', `${percentage}%`],

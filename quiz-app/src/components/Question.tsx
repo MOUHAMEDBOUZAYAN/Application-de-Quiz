@@ -39,7 +39,6 @@ export default function Question({
   const [showHint, setShowHint] = useState(false);
   const [startTime] = useState(Date.now());
   const [isTimeUp, setIsTimeUp] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
 
   const { resolvedTheme } = useTheme();
@@ -53,7 +52,6 @@ export default function Question({
     setTimeLeft(timeLimit);
     setShowHint(false);
     setIsTimeUp(false);
-    setSelectedIndex(null);
     setShowConfetti(false);
   }, [question, timeLimit]);
 
@@ -103,7 +101,6 @@ export default function Question({
     if (isAnswered || isTimeUp) return;
     
     setSelectedAnswer(answer);
-    setSelectedIndex(index);
     setIsAnswered(true);
     
     const timeSpent = (Date.now() - startTime) / 1000;
@@ -121,7 +118,7 @@ export default function Question({
     }, delay);
   }, [isAnswered, isTimeUp, question.correct_answer, startTime, onAnswer, autoNext, streak]);
 
-  const getAnswerClass = (answer: string, index: number) => {
+  const getAnswerClass = (answer: string) => {
     const baseClass = "group relative w-full text-left p-5 rounded-2xl transition-all duration-300 border-2 font-medium transform";
     
     if (!isAnswered && !isTimeUp) {
@@ -386,7 +383,7 @@ export default function Question({
             <motion.button
               key={index}
               onClick={() => handleAnswer(answer, index)}
-              className={getAnswerClass(answer, index)}
+              className={getAnswerClass(answer)}
               disabled={isAnswered || isTimeUp}
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -449,7 +446,6 @@ export default function Question({
               {!isAnswered && !isTimeUp && (
                 <motion.div 
                   className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-                  layoutId={`hover-${index}`}
                 />
               )}
             </motion.button>

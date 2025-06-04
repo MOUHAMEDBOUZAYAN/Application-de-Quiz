@@ -4,7 +4,7 @@ import { useTheme, useThemeClasses } from '../contexts/ThemeContext';
 import { 
   FaGithub, FaLinkedin, FaTwitter, FaQuestionCircle, FaTrophy, 
   FaBook, FaHome, FaChartBar, FaBrain, FaRocket, FaHeart,
-  FaDiscord, FaInstagram, FaYoutube, FaStar, FaGem, FaFire
+  FaDiscord, FaInstagram, FaYoutube, FaStar, FaGem
 } from 'react-icons/fa';
 import { 
   FiMail, FiPhone, FiMapPin, FiArrowUp, FiGlobe, 
@@ -14,7 +14,6 @@ import {
 export default function Footer() {
   const currentYear = new Date().getFullYear();
   const { resolvedTheme } = useTheme();
-  const themeClasses = useThemeClasses();
   const [email, setEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
   const { scrollY } = useScroll();

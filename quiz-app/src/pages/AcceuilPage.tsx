@@ -3,12 +3,12 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { useTheme, useThemeClasses } from '../contexts/ThemeContext';
 import { 
-  FiPlay, FiStar, FiUsers, FiTrendingUp, FiZap, FiAward,
-  FiTarget, FiClock, FiHeart, FiGlobe, FiShield, FiGift
+  FiPlay, FiStar, FiUsers, FiZap,
+  FiTarget, FiHeart, FiGlobe, FiShield, FiGift
 } from 'react-icons/fi';
 import { 
   FaBrain, FaRocket, FaTrophy, FaFire, FaGem, FaLightbulb,
-  FaMagic, FaInfinity, FaGamepad, FaChartLine
+  FaMagic, FaInfinity
 } from 'react-icons/fa';
 
 // Données pour les statistiques

@@ -6,8 +6,8 @@ import { useTheme, useThemeClasses } from '../contexts/ThemeContext';
 import { fetchCategories, CategoryInfo } from '../utils/api';
 import { 
   FiUser, FiArrowRight, 
-  FiBarChart2, FiZap, FiStar, FiTrendingUp, FiShield,
-  FiSettings, FiTarget, FiLayers, FiRefreshCw, FiChevronDown
+  FiBarChart2, FiZap, FiStar, FiShield,
+  FiSettings, FiTarget, FiLayers, FiChevronDown
 } from 'react-icons/fi';
 import { 
   FaLightbulb, FaBrain, FaRocket, FaTrophy, FaFire, FaGem,
