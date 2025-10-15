@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { useTheme, useThemeClasses } from '../contexts/ThemeContext';
 import { 
   FiPlay, FiStar, FiUsers, FiZap,
   FiTarget, FiHeart, FiGlobe, FiShield, FiGift
@@ -100,8 +99,6 @@ const achievements = [
 
 export default function AcceuilPage() {
   const navigate = useNavigate();
-  const { resolvedTheme } = useTheme();
-  const themeClasses = useThemeClasses();
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   
@@ -172,15 +169,15 @@ export default function AcceuilPage() {
   };
 
   return (
-    <div className={`min-h-screen relative overflow-hidden ${themeClasses.bgGradient}`}>
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       {/* Éléments de fond interactifs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Particules flottantes interactives */}
+        {/* Particules flottantes interactives avec style sombre */}
         {Array.from({ length: 12 }).map((_, i) => (
           <motion.div
             key={i}
             className={`absolute w-2 h-2 rounded-full ${
-              i % 4 === 0 ? 'bg-indigo-400/30' :
+              i % 4 === 0 ? 'bg-blue-400/30' :
               i % 4 === 1 ? 'bg-purple-400/30' :
               i % 4 === 2 ? 'bg-cyan-400/30' : 'bg-pink-400/30'
             }`}
@@ -204,9 +201,9 @@ export default function AcceuilPage() {
           />
         ))}
 
-        {/* Formes géométriques avec parallax */}
+        {/* Formes géométriques avec parallax - style sombre */}
         <motion.div 
-          className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 rounded-full blur-xl"
+          className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-xl"
           style={{ y: yParallax }}
           animate={{ 
             scale: [1, 1.3, 1],
@@ -246,28 +243,28 @@ export default function AcceuilPage() {
           initial="hidden"
           animate="visible"
         >
-          {/* Badge de nouveauté */}
+          {/* Badge de nouveauté avec style sombre */}
           <motion.div
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border border-indigo-500/20 rounded-full px-6 py-2 mb-8 backdrop-blur-sm"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 px-6 py-2 mb-8 backdrop-blur-sm"
             variants={itemVariants}
             whileHover={{ scale: 1.05 }}
           >
-            <FiGift className="text-indigo-500 dark:text-indigo-400" />
-            <span className={`text-sm font-semibold ${themeClasses.textPrimary}`}>
+            <FiGift className="text-blue-400" />
+            <span className="text-sm font-semibold text-white">
               🎉 Nouveau: Mode IA révolutionnaire disponible !
             </span>
-            <span className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-xs px-2 py-1 rounded-full">
+            <span className="bg-gradient-to-r from-blue-500 to-purple-600 text-white text-xs px-2 py-1">
               BETA
             </span>
           </motion.div>
 
-          {/* Titre principal */}
+          {/* Titre principal avec style sombre - taille réduite */}
           <motion.h1 
-            className={`text-6xl md:text-8xl font-extrabold mb-8 ${themeClasses.textPrimary}`}
+            className="text-4xl md:text-6xl font-extrabold mb-8 text-white"
             variants={itemVariants}
           >
             <motion.span
-              className="inline-block bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent"
+              className="inline-block bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent"
               animate={{ 
                 backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"]
               }}
@@ -283,7 +280,7 @@ export default function AcceuilPage() {
             >
               Pro
               <motion.div
-                className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center"
+                className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-400 flex items-center justify-center"
                 animate={{ rotate: 360 }}
                 transition={{ duration: 2, repeat: Infinity }}
               >
@@ -292,15 +289,15 @@ export default function AcceuilPage() {
             </motion.span>
           </motion.h1>
 
-          {/* Sous-titre */}
+          {/* Sous-titre avec style sombre - taille réduite */}
           <motion.p 
-            className={`text-xl md:text-2xl mb-12 max-w-3xl mx-auto leading-relaxed ${themeClasses.textSecondary}`}
+            className="text-lg md:text-xl mb-12 max-w-3xl mx-auto leading-relaxed text-slate-300"
             variants={itemVariants}
           >
             L'expérience de quiz la plus avancée au monde. Intelligence artificielle, 
             compétitions en temps réel, et progression personnalisée pour 
             <motion.span
-              className="font-semibold bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent"
+              className="font-semibold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent"
               animate={{ scale: [1, 1.05, 1] }}
               transition={{ duration: 2, repeat: Infinity }}
             >
@@ -315,7 +312,7 @@ export default function AcceuilPage() {
           >
             <motion.button
               onClick={handleGetStarted}
-              className="group relative px-12 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl font-bold text-lg shadow-2xl overflow-hidden"
+              className="group relative px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold text-base shadow-2xl overflow-hidden border border-blue-400/30"
               whileHover={{ scale: 1.05, y: -3 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -342,7 +339,7 @@ export default function AcceuilPage() {
             </motion.button>
 
             <motion.button
-              className={`px-12 py-4 ${themeClasses.bgCard} ${themeClasses.textPrimary} border-2 border-indigo-500/30 rounded-2xl font-bold text-lg hover:border-indigo-500 transition-all backdrop-blur-sm`}
+              className="px-8 py-3 bg-slate-800/50 backdrop-blur-sm text-white border-2 border-blue-500/30 font-bold text-base hover:border-blue-400 transition-all"
               whileHover={{ scale: 1.05, y: -3 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -353,7 +350,7 @@ export default function AcceuilPage() {
             </motion.button>
           </motion.div>
 
-          {/* Statistiques */}
+          {/* Statistiques avec style sombre */}
           <motion.div 
             className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto"
             variants={containerVariants}
@@ -361,7 +358,7 @@ export default function AcceuilPage() {
             {stats.map((stat, index) => (
               <motion.div
                 key={index}
-                className={`${themeClasses.bgCard} p-6 rounded-2xl backdrop-blur-xl border ${themeClasses.border} group cursor-default`}
+                className="bg-slate-800/50 backdrop-blur-xl p-6 rounded-2xl border border-slate-700/50 group cursor-default"
                 variants={itemVariants}
                 whileHover={{ scale: 1.05, y: -5 }}
                 transition={{ type: "spring", stiffness: 300 }}
@@ -372,13 +369,13 @@ export default function AcceuilPage() {
                   {stat.icon}
                 </motion.div>
                 <motion.div
-                  className={`text-3xl font-bold mb-2 ${themeClasses.textPrimary}`}
+                  className="text-3xl font-bold mb-2 text-white"
                   animate={{ scale: [1, 1.05, 1] }}
                   transition={{ duration: 2, repeat: Infinity, delay: index * 0.2 }}
                 >
                   {stat.value}
                 </motion.div>
-                <div className={`text-sm ${themeClasses.textSecondary}`}>
+                <div className="text-sm text-slate-300">
                   {stat.label}
                 </div>
               </motion.div>
@@ -398,18 +395,18 @@ export default function AcceuilPage() {
             transition={{ duration: 0.8 }}
           >
             <motion.h2 
-              className={`text-5xl md:text-6xl font-bold mb-6 ${themeClasses.textPrimary}`}
+              className="text-3xl md:text-4xl font-bold mb-6 text-white"
               animate={{ 
                 backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"]
               }}
               transition={{ duration: 6, repeat: Infinity }}
             >
               Fonctionnalités
-              <span className="bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                 {" "}Révolutionnaires
               </span>
             </motion.h2>
-            <p className={`text-xl ${themeClasses.textSecondary} max-w-3xl mx-auto`}>
+            <p className="text-lg text-slate-300 max-w-3xl mx-auto">
               Découvrez les technologies de pointe qui font de QuizMaster Pro 
               l'application de quiz la plus avancée du marché.
             </p>
@@ -419,7 +416,7 @@ export default function AcceuilPage() {
             {features.map((feature, index) => (
               <motion.div
                 key={index}
-                className={`${themeClasses.bgCard} p-8 rounded-3xl backdrop-blur-xl border ${themeClasses.border} group`}
+                className="bg-slate-800/50 backdrop-blur-xl p-6 border border-slate-700/50 group"
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -427,12 +424,12 @@ export default function AcceuilPage() {
                 whileHover={{ y: -10, scale: 1.02 }}
               >
                 <motion.div 
-                  className={`w-16 h-16 bg-gradient-to-r ${feature.gradient} rounded-2xl flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform`}
+                  className={`w-12 h-12 bg-gradient-to-r ${feature.gradient} flex items-center justify-center text-white mb-4 group-hover:scale-110 transition-transform`}
                   animate={{ 
                     boxShadow: [
-                      "0 0 20px rgba(99, 102, 241, 0.3)",
-                      "0 0 40px rgba(139, 92, 246, 0.4)",
-                      "0 0 20px rgba(99, 102, 241, 0.3)"
+                      "0 0 20px rgba(59, 130, 246, 0.3)",
+                      "0 0 40px rgba(147, 51, 234, 0.4)",
+                      "0 0 20px rgba(59, 130, 246, 0.3)"
                     ]
                   }}
                   transition={{ duration: 3, repeat: Infinity }}
@@ -440,17 +437,17 @@ export default function AcceuilPage() {
                   {feature.icon}
                 </motion.div>
                 
-                <h3 className={`text-2xl font-bold mb-4 ${themeClasses.textPrimary}`}>
+                <h3 className="text-xl font-bold mb-3 text-white">
                   {feature.title}
                 </h3>
                 
-                <p className={`${themeClasses.textSecondary} leading-relaxed`}>
+                <p className="text-slate-300 leading-relaxed text-sm">
                   {feature.description}
                 </p>
 
                 {/* Indicateur de hover */}
                 <motion.div
-                  className="w-full h-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full mt-6 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"
+                  className="w-full h-1 bg-gradient-to-r from-blue-500 to-purple-600 mt-4 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"
                 />
               </motion.div>
             ))}
@@ -467,24 +464,24 @@ export default function AcceuilPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className={`text-5xl font-bold mb-6 ${themeClasses.textPrimary}`}>
+            <h2 className="text-3xl font-bold mb-6 text-white">
               Ce que disent nos
-              <span className="bg-gradient-to-r from-yellow-500 to-orange-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-cyan-400 to-pink-400 bg-clip-text text-transparent">
                 {" "}Champions
               </span>
             </h2>
-            <p className={`text-xl ${themeClasses.textSecondary}`}>
+            <p className="text-lg text-slate-300">
               Rejoignez des milliers d'utilisateurs qui ont transformé leur apprentissage
             </p>
           </motion.div>
 
           <motion.div
-            className={`${themeClasses.bgCard} p-8 md:p-12 rounded-3xl backdrop-blur-xl border ${themeClasses.border} relative overflow-hidden`}
+            className="bg-slate-800/50 backdrop-blur-xl p-6 md:p-8 border border-slate-700/50 relative overflow-hidden"
             layout
           >
-            {/* Éléments décoratifs */}
-            <div className="absolute top-4 left-4 text-6xl text-indigo-500/20">"</div>
-            <div className="absolute bottom-4 right-4 text-6xl text-indigo-500/20 rotate-180">"</div>
+            {/* Éléments décoratifs avec style sombre - réduits */}
+            <div className="absolute top-4 left-4 text-4xl text-blue-500/20">"</div>
+            <div className="absolute bottom-4 right-4 text-4xl text-blue-500/20 rotate-180">"</div>
 
             <motion.div
               key={currentTestimonial}
@@ -493,9 +490,9 @@ export default function AcceuilPage() {
               exit={{ opacity: 0, x: -50 }}
               className="text-center relative z-10"
             >
-              {/* Avatar */}
+              {/* Avatar avec style sombre - réduit */}
               <motion.div
-                className="w-20 h-20 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-6"
+                className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white text-xl font-bold mx-auto mb-4"
                 whileHover={{ scale: 1.1, rotate: 360 }}
                 transition={{ duration: 0.6 }}
               >
@@ -503,7 +500,7 @@ export default function AcceuilPage() {
               </motion.div>
 
               {/* Étoiles */}
-              <div className="flex justify-center gap-1 mb-6">
+              <div className="flex justify-center gap-1 mb-4">
                 {Array.from({ length: testimonials[currentTestimonial].rating }).map((_, i) => (
                   <motion.div
                     key={i}
@@ -516,32 +513,32 @@ export default function AcceuilPage() {
                 ))}
               </div>
 
-              {/* Contenu */}
-              <p className={`text-xl md:text-2xl mb-6 ${themeClasses.textPrimary} leading-relaxed max-w-4xl mx-auto`}>
+              {/* Contenu avec style sombre */}
+              <p className="text-lg md:text-xl mb-4 text-white leading-relaxed max-w-4xl mx-auto">
                 {testimonials[currentTestimonial].content}
               </p>
 
               {/* Auteur */}
               <div>
-                <h4 className={`text-lg font-bold ${themeClasses.textPrimary}`}>
+                <h4 className="text-base font-bold text-white">
                   {testimonials[currentTestimonial].name}
                 </h4>
-                <p className={`${themeClasses.textMuted}`}>
+                <p className="text-slate-400 text-sm">
                   {testimonials[currentTestimonial].role}
                 </p>
               </div>
             </motion.div>
 
-            {/* Indicateurs */}
-            <div className="flex justify-center gap-2 mt-8">
+            {/* Indicateurs avec style sombre */}
+            <div className="flex justify-center gap-2 mt-6">
               {testimonials.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentTestimonial(index)}
-                  className={`w-3 h-3 rounded-full transition-all ${
+                  className={`w-3 h-3 transition-all ${
                     index === currentTestimonial 
-                      ? 'bg-indigo-500 w-8' 
-                      : 'bg-gray-300 dark:bg-gray-600'
+                      ? 'bg-blue-500 w-8' 
+                      : 'bg-slate-600'
                   }`}
                 />
               ))}
@@ -559,13 +556,13 @@ export default function AcceuilPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className={`text-5xl font-bold mb-6 ${themeClasses.textPrimary}`}>
+            <h2 className="text-3xl font-bold mb-6 text-white">
               Débloquez des
-              <span className="bg-gradient-to-r from-yellow-500 to-orange-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-cyan-400 to-pink-400 bg-clip-text text-transparent">
                 {" "}Achievements
               </span>
             </h2>
-            <p className={`text-xl ${themeClasses.textSecondary}`}>
+            <p className="text-lg text-slate-300">
               Collectionnez des badges uniques en accomplissant des défis extraordinaires
             </p>
           </motion.div>
@@ -574,7 +571,7 @@ export default function AcceuilPage() {
             {achievements.map((achievement, index) => (
               <motion.div
                 key={index}
-                className={`${themeClasses.bgCard} p-6 rounded-2xl backdrop-blur-xl border ${themeClasses.border} group text-center`}
+                className="bg-slate-800/50 backdrop-blur-xl p-4 border border-slate-700/50 group text-center"
                 initial={{ opacity: 0, scale: 0.8 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
@@ -582,7 +579,7 @@ export default function AcceuilPage() {
                 whileHover={{ y: -5, scale: 1.05 }}
               >
                 <motion.div 
-                  className="w-16 h-16 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-2xl flex items-center justify-center text-white text-2xl mx-auto mb-4 group-hover:scale-110 transition-transform"
+                  className="w-12 h-12 bg-gradient-to-r from-cyan-500 to-pink-600 flex items-center justify-center text-white text-lg mx-auto mb-3 group-hover:scale-110 transition-transform"
                   animate={{ 
                     rotate: [0, 5, -5, 0],
                     scale: [1, 1.05, 1]
@@ -592,18 +589,18 @@ export default function AcceuilPage() {
                   {achievement.icon}
                 </motion.div>
                 
-                <h3 className={`text-lg font-bold mb-2 ${themeClasses.textPrimary}`}>
+                <h3 className="text-base font-bold mb-2 text-white">
                   {achievement.name}
                 </h3>
                 
-                <p className={`text-sm ${themeClasses.textSecondary}`}>
+                <p className="text-xs text-slate-300">
                   {achievement.description}
                 </p>
 
-                {/* Barre de progression simulée */}
-                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-4">
+                {/* Barre de progression simulée avec style sombre */}
+                <div className="w-full bg-slate-700 h-1.5 mt-3">
                   <motion.div
-                    className="h-2 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-full"
+                    className="h-1.5 bg-gradient-to-r from-cyan-500 to-pink-600"
                     initial={{ width: 0 }}
                     whileInView={{ width: `${Math.random() * 80 + 20}%` }}
                     transition={{ duration: 1.5, delay: index * 0.2 }}
@@ -619,15 +616,15 @@ export default function AcceuilPage() {
       <section className="relative z-10 py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div
-            className={`${themeClasses.bgCard} p-12 rounded-3xl backdrop-blur-xl border ${themeClasses.border} relative overflow-hidden`}
+            className="bg-slate-800/50 backdrop-blur-xl p-12 border border-slate-700/50 relative overflow-hidden"
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             whileHover={{ scale: 1.02 }}
           >
-            {/* Éléments décoratifs animés */}
+            {/* Éléments décoratifs animés avec style sombre */}
             <motion.div
-              className="absolute top-4 right-4 w-20 h-20 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 rounded-full blur-xl"
+              className="absolute top-4 right-4 w-20 h-20 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-xl"
               animate={{ 
                 scale: [1, 1.5, 1],
                 opacity: [0.3, 0.6, 0.3]
@@ -636,18 +633,18 @@ export default function AcceuilPage() {
             />
 
             <motion.h2 
-              className={`text-5xl font-bold mb-6 ${themeClasses.textPrimary}`}
+              className="text-3xl font-bold mb-6 text-white"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
               Prêt à devenir un
-              <span className="bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                 {" "}Maître du Quiz
               </span> ?
             </motion.h2>
 
-            <p className={`text-xl mb-8 ${themeClasses.textSecondary} max-w-2xl mx-auto`}>
+            <p className="text-lg mb-8 text-slate-300 max-w-2xl mx-auto">
               Rejoignez la révolution de l'apprentissage intelligent. 
               Votre cerveau va adorer ce défi !
             </p>
@@ -659,13 +656,13 @@ export default function AcceuilPage() {
                 whileHover={{ scale: 1.05 }}
               >
                 <motion.div 
-                  className={`text-3xl font-bold ${themeClasses.textPrimary} mb-2`}
+                  className="text-2xl font-bold text-white mb-2"
                   animate={{ scale: [1, 1.1, 1] }}
                   transition={{ duration: 2, repeat: Infinity, delay: 0 }}
                 >
                   2 min
                 </motion.div>
-                <div className={`text-sm ${themeClasses.textMuted}`}>
+                <div className="text-xs text-slate-400">
                   Temps d'inscription
                 </div>
               </motion.div>
@@ -675,13 +672,13 @@ export default function AcceuilPage() {
                 whileHover={{ scale: 1.05 }}
               >
                 <motion.div 
-                  className={`text-3xl font-bold text-green-500 mb-2`}
+                  className="text-2xl font-bold text-green-400 mb-2"
                   animate={{ scale: [1, 1.1, 1] }}
                   transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
                 >
                   100%
                 </motion.div>
-                <div className={`text-sm ${themeClasses.textMuted}`}>
+                <div className="text-xs text-slate-400">
                   Gratuit
                 </div>
               </motion.div>
@@ -691,13 +688,13 @@ export default function AcceuilPage() {
                 whileHover={{ scale: 1.05 }}
               >
                 <motion.div 
-                  className={`text-3xl font-bold text-yellow-500 mb-2`}
+                  className="text-2xl font-bold text-yellow-400 mb-2"
                   animate={{ scale: [1, 1.1, 1] }}
                   transition={{ duration: 2, repeat: Infinity, delay: 1 }}
                 >
                   ∞
                 </motion.div>
-                <div className={`text-sm ${themeClasses.textMuted}`}>
+                <div className="text-xs text-slate-400">
                   Possibilités
                 </div>
               </motion.div>
@@ -706,7 +703,7 @@ export default function AcceuilPage() {
             {/* Bouton d'action principal */}
             <motion.button
               onClick={handleGetStarted}
-              className="group relative px-12 py-4 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white rounded-2xl font-bold text-xl shadow-2xl overflow-hidden"
+              className="group relative px-8 py-3 bg-gradient-to-r from-blue-500 via-purple-600 to-pink-600 text-white font-bold text-lg shadow-2xl overflow-hidden border border-blue-400/30"
               whileHover={{ scale: 1.05, y: -3 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -749,16 +746,16 @@ export default function AcceuilPage() {
               transition={{ delay: 1 }}
             >
               <div className="flex items-center gap-2">
-                <FiShield className="text-green-500" />
-                <span className={themeClasses.textMuted}>100% Sécurisé</span>
+                <FiShield className="text-green-400" />
+                <span className="text-slate-400">100% Sécurisé</span>
               </div>
               <div className="flex items-center gap-2">
-                <FiHeart className="text-red-500" />
-                <span className={themeClasses.textMuted}>Sans Publicité</span>
+                <FiHeart className="text-red-400" />
+                <span className="text-slate-400">Sans Publicité</span>
               </div>
               <div className="flex items-center gap-2">
-                <FaInfinity className="text-blue-500" />
-                <span className={themeClasses.textMuted}>Accès Illimité</span>
+                <FaInfinity className="text-blue-400" />
+                <span className="text-slate-400">Accès Illimité</span>
               </div>
             </motion.div>
 
@@ -772,7 +769,7 @@ export default function AcceuilPage() {
                 {['A', 'B', 'C', 'D', 'E'].map((letter, i) => (
                   <motion.div
                     key={letter}
-                    className="w-8 h-8 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-bold border-2 border-white dark:border-gray-800"
+                    className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white text-sm font-bold border-2 border-slate-800"
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ delay: i * 0.1 }}
@@ -781,7 +778,7 @@ export default function AcceuilPage() {
                   </motion.div>
                 ))}
               </div>
-              <span className={`text-sm ${themeClasses.textMuted}`}>
+              <span className="text-sm text-slate-400">
                 +10,000 joueurs nous ont déjà rejoint cette semaine
               </span>
             </motion.div>
@@ -794,7 +791,7 @@ export default function AcceuilPage() {
         <motion.div
           variants={floatingVariants}
           animate="float"
-          className="w-16 h-16 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white shadow-2xl"
+          className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white shadow-2xl"
         >
           <FaBrain className="text-2xl" />
         </motion.div>
@@ -804,7 +801,7 @@ export default function AcceuilPage() {
         <motion.div
           variants={floatingVariants}
           animate="float"
-          className="w-12 h-12 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-full flex items-center justify-center text-white shadow-2xl"
+          className="w-12 h-12 bg-gradient-to-r from-cyan-500 to-pink-600 rounded-full flex items-center justify-center text-white shadow-2xl"
           transition={{ delay: 1 }}
         >
           <FaTrophy className="text-xl" />
@@ -824,7 +821,7 @@ export default function AcceuilPage() {
           ease: "easeInOut"
         }}
       >
-        <div className="w-8 h-8 bg-gradient-to-r from-cyan-400 to-blue-600 rounded-full flex items-center justify-center text-white shadow-lg">
+        <div className="w-8 h-8 bg-gradient-to-r from-blue-400 to-purple-600 rounded-full flex items-center justify-center text-white shadow-lg">
           <span className="text-sm">?</span>
         </div>
       </motion.div>
@@ -842,7 +839,7 @@ export default function AcceuilPage() {
           delay: 2
         }}
       >
-        <div className="w-6 h-6 bg-gradient-to-r from-pink-400 to-red-600 rounded-full flex items-center justify-center text-white shadow-lg">
+        <div className="w-6 h-6 bg-gradient-to-r from-pink-400 to-purple-600 rounded-full flex items-center justify-center text-white shadow-lg">
           <FiZap className="text-xs" />
         </div>
       </motion.div>
@@ -869,7 +866,7 @@ export default function AcceuilPage() {
             ease: "easeInOut"
           }}
         >
-          <div className="w-4 h-4 bg-gradient-to-r from-indigo-400 to-purple-600 rounded-full blur-sm" />
+          <div className="w-4 h-4 bg-gradient-to-r from-blue-400 to-purple-600 rounded-full blur-sm" />
         </motion.div>
       ))}
 
@@ -879,9 +876,9 @@ export default function AcceuilPage() {
         animate={{ y: [0, 10, 0] }}
         transition={{ duration: 2, repeat: Infinity }}
       >
-        <div className={`w-6 h-10 border-2 ${themeClasses.border} rounded-full flex justify-center`}>
+        <div className="w-6 h-10 border-2 border-slate-700 flex justify-center">
           <motion.div
-            className="w-1 h-3 bg-gradient-to-b from-indigo-500 to-purple-600 rounded-full mt-2"
+            className="w-1 h-3 bg-gradient-to-b from-blue-500 to-purple-600 mt-2"
             animate={{ y: [0, 12, 0] }}
             transition={{ duration: 2, repeat: Infinity }}
           />
