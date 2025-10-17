@@ -7,6 +7,44 @@ html, body, #root {
   @apply min-h-screen;
 }
 
+/* Prevent horizontal overflow */
+html, body {
+  overflow-x: hidden;
+}
+
+/* Navbar fixes */
+.navbar-container {
+  @apply w-full max-w-full;
+}
+
+/* Ensure navbar doesn't overflow */
+nav {
+  @apply w-full max-w-full overflow-hidden;
+}
+
+/* Navbar responsive fixes */
+@media (max-width: 1024px) {
+  .navbar-container {
+    @apply px-1;
+  }
+}
+
+@media (max-width: 640px) {
+  .navbar-container {
+    @apply px-0;
+  }
+}
+
+/* Prevent text overflow */
+.navbar-text {
+  @apply truncate;
+}
+
+/* Ensure buttons don't overflow */
+.navbar-button {
+  @apply flex-shrink-0;
+}
+
 /* Smooth transitions */
 * {
   @apply transition-colors duration-200;

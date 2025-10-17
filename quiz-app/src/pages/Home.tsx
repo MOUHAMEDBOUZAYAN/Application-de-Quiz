@@ -153,7 +153,7 @@ export default function Home() {
   };
 
   return (
-    <div className={`min-h-screen relative overflow-hidden ${themeClasses.bgGradient}`}>
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       {/* Éléments de fond animés améliorés */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {/* Particules flottantes interactives */}
@@ -210,7 +210,7 @@ export default function Home() {
           animate="visible"
         >
           <motion.div 
-            className={`w-full ${themeClasses.bgCard} rounded-3xl ${themeClasses.shadow} overflow-hidden border ${themeClasses.border}`}
+            className={`w-full bg-slate-800/90 backdrop-blur-xl shadow-2xl overflow-hidden border border-slate-700`}
             whileHover={{ scale: 1.01 }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
           >
@@ -293,7 +293,7 @@ export default function Home() {
               <motion.div variants={itemVariants}>
                 <label 
                   htmlFor="name" 
-                  className={`block ${themeClasses.textPrimary} font-semibold mb-4 flex items-center text-lg`}
+                  className="text-white font-semibold mb-4 flex items-center text-lg"
                 >
                   <motion.div
                     className="mr-3 p-2 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl text-white"
@@ -310,12 +310,12 @@ export default function Home() {
                     id="name"
                     type="text"
                     placeholder="Entrez votre nom..."
-                    className={`w-full px-6 py-4 pl-14 border-2 rounded-2xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-lg font-medium ${themeClasses.inputBg} ${themeClasses.border} group-hover:border-indigo-400`}
+                    className="w-full px-6 py-4 pl-14 border-2 border-slate-600 bg-slate-700/50 focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-lg font-medium text-white placeholder-slate-400 group-hover:border-indigo-400"
                     value={quizOptions.name}
                     onChange={(e) => setQuizOptions(prev => ({ ...prev, name: e.target.value }))}
                     onKeyPress={(e) => e.key === 'Enter' && handleStartQuiz()}
                   />
-                  <FiUser className={`absolute left-5 top-1/2 transform -translate-y-1/2 text-xl ${themeClasses.textMuted} group-hover:text-indigo-500 transition-colors`} />
+                  <FiUser className="absolute left-5 top-1/2 transform -translate-y-1/2 text-xl text-slate-400 group-hover:text-indigo-500 transition-colors" />
                   
                   {/* Indicateur de validation */}
                   <AnimatePresence>
@@ -337,7 +337,7 @@ export default function Home() {
 
               {/* Section Catégorie */}
               <motion.div variants={itemVariants}>
-                <label className={`block ${themeClasses.textPrimary} font-semibold mb-4 flex items-center text-lg`}>
+                <label className="text-white font-semibold mb-4 flex items-center text-lg">
                   <div className="mr-3 p-2 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-xl text-white">
                     <FaBook className="text-xl" />
                   </div>
@@ -346,7 +346,7 @@ export default function Home() {
                 
                 <div className="relative">
                   <select
-                    className={`w-full px-6 py-4 pr-12 border-2 rounded-2xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-lg appearance-none ${themeClasses.inputBg} ${themeClasses.border}`}
+                    className="w-full px-6 py-4 pr-12 border-2 border-slate-600 bg-slate-700/50 focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-lg appearance-none text-white"
                     value={quizOptions.category || 0}
                     onChange={(e) => setQuizOptions(prev => ({ 
                       ...prev, 
@@ -364,7 +364,7 @@ export default function Home() {
                       ))
                     )}
                   </select>
-                  <FiChevronDown className={`absolute right-4 top-1/2 transform -translate-y-1/2 text-xl ${themeClasses.textMuted} pointer-events-none`} />
+                  <FiChevronDown className="absolute right-4 top-1/2 transform -translate-y-1/2 text-xl text-slate-400 pointer-events-none" />
                 </div>
                 
                 {/* Aperçu des catégories */}
@@ -372,10 +372,10 @@ export default function Home() {
                   {categories.slice(1, 5).map((category) => (
                     <motion.div
                       key={category.id}
-                      className={`p-3 rounded-xl border transition-all cursor-pointer ${
+                      className={`p-3 border transition-all cursor-pointer ${
                         quizOptions.category === category.id 
-                          ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/30' 
-                          : `${themeClasses.border} ${themeClasses.bgTertiary} hover:border-blue-400`
+                          ? 'border-blue-500 bg-blue-500/20' 
+                          : 'border-slate-600 bg-slate-700/50 hover:border-blue-400'
                       }`}
                       onClick={() => setQuizOptions(prev => ({ ...prev, category: category.id }))}
                       whileHover={{ scale: 1.05 }}
@@ -383,7 +383,7 @@ export default function Home() {
                     >
                       <div className="flex items-center gap-2 text-sm">
                         {categoryIcons[category.name] || categoryIcons.default}
-                        <span className={`font-medium ${themeClasses.textPrimary} truncate`}>
+                        <span className="font-medium text-white truncate">
                           {category.name}
                         </span>
                       </div>
@@ -394,7 +394,7 @@ export default function Home() {
 
               {/* Section Type de questions */}
               <motion.div variants={itemVariants}>
-                <label className={`block ${themeClasses.textPrimary} font-semibold mb-4 flex items-center text-lg`}>
+                <label className="text-white font-semibold mb-4 flex items-center text-lg">
                   <div className="mr-3 p-2 bg-gradient-to-r from-purple-500 to-pink-600 rounded-xl text-white">
                     <FiLayers className="text-xl" />
                   </div>
@@ -405,10 +405,10 @@ export default function Home() {
                   {Object.entries(typeConfig).map(([key, config]) => (
                     <motion.div
                       key={key}
-                      className={`p-4 rounded-2xl border-2 cursor-pointer transition-all ${
+                      className={`p-4 border-2 cursor-pointer transition-all ${
                         quizOptions.type === key 
-                          ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/30' 
-                          : `${themeClasses.border} ${themeClasses.bgTertiary} hover:border-purple-400`
+                          ? 'border-purple-500 bg-purple-500/20' 
+                          : 'border-slate-600 bg-slate-700/50 hover:border-purple-400'
                       }`}
                       onClick={() => setQuizOptions(prev => ({ ...prev, type: key as any }))}
                       whileHover={{ scale: 1.02, y: -2 }}
@@ -418,14 +418,14 @@ export default function Home() {
                         <div className={`w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3 ${
                           quizOptions.type === key 
                             ? 'bg-purple-500 text-white' 
-                            : `${themeClasses.bgSecondary} ${themeClasses.textSecondary}`
+                            : 'bg-slate-600 text-slate-300'
                         }`}>
                           {config.icon}
                         </div>
-                        <h3 className={`font-bold mb-1 ${themeClasses.textPrimary}`}>
+                        <h3 className="font-bold mb-1 text-white">
                           {config.label}
                         </h3>
-                        <p className={`text-sm ${themeClasses.textMuted}`}>
+                        <p className="text-sm text-slate-300">
                           {config.desc}
                         </p>
                       </div>
@@ -438,7 +438,7 @@ export default function Home() {
               <motion.div variants={itemVariants}>
                 <motion.button
                   onClick={() => setShowAdvanced(!showAdvanced)}
-                  className={`flex items-center justify-between w-full p-4 rounded-2xl border ${themeClasses.border} ${themeClasses.bgTertiary} hover:bg-opacity-80 transition-all`}
+                  className="flex items-center justify-between w-full p-4 border border-slate-600 bg-slate-700/50 hover:bg-opacity-80 transition-all"
                   whileHover={{ scale: 1.01 }}
                 >
                   <div className="flex items-center gap-3">
@@ -446,10 +446,10 @@ export default function Home() {
                       <FiSettings className="text-xl" />
                     </div>
                     <div className="text-left">
-                      <h3 className={`font-semibold ${themeClasses.textPrimary}`}>
+                      <h3 className="font-semibold text-white">
                         Options Avancées
                       </h3>
-                      <p className={`text-sm ${themeClasses.textMuted}`}>
+                      <p className="text-sm text-slate-300">
                         Difficulté, nombre de questions, temps
                       </p>
                     </div>
@@ -458,7 +458,7 @@ export default function Home() {
                     animate={{ rotate: showAdvanced ? 180 : 0 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <FiChevronDown className={`text-xl ${themeClasses.textMuted}`} />
+                    <FiChevronDown className="text-xl text-slate-400" />
                   </motion.div>
                 </motion.button>
 
@@ -472,7 +472,7 @@ export default function Home() {
                     >
                       {/* Difficulté */}
                       <div>
-                        <label className={`block ${themeClasses.textPrimary} font-medium mb-3`}>
+                        <label className="block text-white font-medium mb-3">
                           Niveau de difficulté
                         </label>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -480,10 +480,10 @@ export default function Home() {
                             <motion.button
                               key={key}
                               onClick={() => setQuizOptions(prev => ({ ...prev, difficulty: key as any }))}
-                              className={`p-3 rounded-xl border-2 transition-all ${
+                              className={`p-3 border-2 transition-all ${
                                 quizOptions.difficulty === key 
                                   ? `border-current ${config.bg} ${config.color}` 
-                                  : `${themeClasses.border} ${themeClasses.bgTertiary} ${themeClasses.textSecondary} hover:border-gray-400`
+                                  : 'border-slate-600 bg-slate-700/50 text-slate-300 hover:border-gray-400'
                               }`}
                               whileHover={{ scale: 1.05 }}
                               whileTap={{ scale: 0.95 }}
@@ -500,7 +500,7 @@ export default function Home() {
 
                       {/* Nombre de questions */}
                       <div>
-                        <label className={`block ${themeClasses.textPrimary} font-medium mb-3`}>
+                        <label className="block text-white font-medium mb-3">
                           Nombre de questions: {quizOptions.questionCount}
                         </label>
                         <input
@@ -513,15 +513,15 @@ export default function Home() {
                           className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 slider"
                         />
                         <div className="flex justify-between text-sm mt-2">
-                          <span className={themeClasses.textMuted}>5</span>
-                          <span className={themeClasses.textMuted}>25</span>
-                          <span className={themeClasses.textMuted}>50</span>
+                          <span className="text-slate-400">5</span>
+                          <span className="text-slate-400">25</span>
+                          <span className="text-slate-400">50</span>
                         </div>
                       </div>
 
                       {/* Temps par question */}
                       <div>
-                        <label className={`block ${themeClasses.textPrimary} font-medium mb-3`}>
+                        <label className="block text-white font-medium mb-3">
                           Temps par question: {quizOptions.timeLimit}s
                         </label>
                         <input
@@ -534,9 +534,9 @@ export default function Home() {
                           className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
                         />
                         <div className="flex justify-between text-sm mt-2">
-                          <span className={themeClasses.textMuted}>10s</span>
-                          <span className={themeClasses.textMuted}>60s</span>
-                          <span className={themeClasses.textMuted}>120s</span>
+                          <span className="text-slate-400">10s</span>
+                          <span className="text-slate-400">60s</span>
+                          <span className="text-slate-400">120s</span>
                         </div>
                       </div>
                     </motion.div>
@@ -547,34 +547,34 @@ export default function Home() {
               {/* Récapitulatif des options */}
               <motion.div 
                 variants={itemVariants}
-                className={`p-6 rounded-2xl ${themeClasses.bgSecondary} border ${themeClasses.border}`}
+                className="p-6 bg-slate-700/50 border border-slate-600"
               >
-                <h3 className={`font-bold mb-4 flex items-center gap-2 ${themeClasses.textPrimary}`}>
+                <h3 className="font-bold mb-4 flex items-center gap-2 text-white">
                   <FiTarget className="text-indigo-500" />
                   Récapitulatif de votre quiz
                 </h3>
                 <div className="grid md:grid-cols-2 gap-4 text-sm">
                   <div className="flex justify-between">
-                    <span className={themeClasses.textMuted}>Catégorie:</span>
-                    <span className={`font-medium ${themeClasses.textPrimary}`}>
+                    <span className="text-slate-400">Catégorie:</span>
+                    <span className="font-medium text-white">
                       {categories.find(c => c.id === (quizOptions.category || 0))?.name || 'Toutes'}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className={themeClasses.textMuted}>Type:</span>
-                    <span className={`font-medium ${themeClasses.textPrimary}`}>
+                    <span className="text-slate-400">Type:</span>
+                    <span className="font-medium text-white">
                       {typeConfig[quizOptions.type].label}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className={themeClasses.textMuted}>Difficulté:</span>
+                    <span className="text-slate-400">Difficulté:</span>
                     <span className={`font-medium ${difficultyConfig[quizOptions.difficulty].color}`}>
                       {difficultyConfig[quizOptions.difficulty].label}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className={themeClasses.textMuted}>Questions:</span>
-                    <span className={`font-medium ${themeClasses.textPrimary}`}>
+                    <span className="text-slate-400">Questions:</span>
+                    <span className="font-medium text-white">
                       {quizOptions.questionCount}
                     </span>
                   </div>
@@ -586,10 +586,10 @@ export default function Home() {
                 <motion.button
                   onClick={handleStartQuiz}
                   disabled={!quizOptions.name.trim() || isLoading}
-                  className={`w-full flex items-center justify-center py-5 px-8 rounded-2xl font-bold text-xl transition-all duration-300 relative overflow-hidden group ${
+                  className={`w-full flex items-center justify-center py-5 px-8 font-bold text-xl transition-all duration-300 relative overflow-hidden group ${
                     quizOptions.name.trim() && !isLoading
                       ? 'bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700 text-white shadow-2xl hover:shadow-3xl transform hover:scale-[1.02]'
-                      : `${themeClasses.bgTertiary} ${themeClasses.textMuted} cursor-not-allowed`
+                      : 'bg-slate-700/50 text-slate-400 cursor-not-allowed'
                   }`}
                   whileHover={quizOptions.name.trim() && !isLoading ? { y: -3 } : {}}
                   whileTap={quizOptions.name.trim() && !isLoading ? { scale: 0.98 } : {}}
@@ -667,7 +667,7 @@ export default function Home() {
                 ].map((item, index) => (
                   <motion.div
                     key={index}
-                    className={`p-4 rounded-xl ${themeClasses.bgTertiary} border ${themeClasses.border} group`}
+                    className="p-4 bg-slate-700/50 border border-slate-600 group"
                     whileHover={{ scale: 1.05, y: -2 }}
                   >
                     <motion.div 
@@ -684,7 +684,7 @@ export default function Home() {
                     >
                       {item.icon}
                     </motion.div>
-                    <p className={`text-sm font-medium ${themeClasses.textPrimary}`}>
+                    <p className="text-sm font-medium text-white">
                       {item.label}
                     </p>
                   </motion.div>
@@ -696,7 +696,7 @@ export default function Home() {
                 className="text-center"
                 variants={itemVariants}
               >
-                <div className={`p-6 rounded-2xl bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 border ${themeClasses.border} relative overflow-hidden`}>
+                <div className="p-6 bg-gradient-to-r from-indigo-900/20 to-purple-900/20 border border-slate-600 relative overflow-hidden">
                   {/* Éléments décoratifs */}
                   <motion.div
                     className="absolute top-2 right-2 w-16 h-16 bg-gradient-to-r from-yellow-400/20 to-orange-400/20 rounded-full blur-xl"
@@ -723,14 +723,14 @@ export default function Home() {
                     </div>
                     
                     <motion.p 
-                      className={`${themeClasses.textSecondary} mb-2 text-lg font-medium`}
+                      className="text-slate-300 mb-2 text-lg font-medium"
                       animate={{ opacity: [0.8, 1, 0.8] }}
                       transition={{ duration: 3, repeat: Infinity }}
                     >
                       "Cette personnalisation rend chaque quiz unique !"
                     </motion.p>
                     
-                    <p className={`${themeClasses.textMuted} text-sm`}>
+                    <p className="text-slate-400 text-sm">
                       - Marie L., utilisatrice depuis 2024
                     </p>
 
@@ -768,7 +768,7 @@ export default function Home() {
                 variants={itemVariants}
                 className="space-y-4"
               >
-                <h3 className={`text-lg font-semibold ${themeClasses.textPrimary} text-center flex items-center justify-center gap-2`}>
+                <h3 className="text-lg font-semibold text-white text-center flex items-center justify-center gap-2">
                   <FaLightbulb className="text-yellow-500" />
                   Suggestions populaires
                 </h3>
@@ -806,7 +806,7 @@ export default function Home() {
                         ...prev, 
                         ...suggestion.config 
                       }))}
-                      className={`p-4 rounded-xl border-2 border-dashed transition-all text-left group ${themeClasses.border} ${themeClasses.bgTertiary} hover:border-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20`}
+                      className="p-4 border-2 border-dashed border-slate-600 bg-slate-700/50 transition-all text-left group hover:border-indigo-400 hover:bg-indigo-900/20"
                       whileHover={{ scale: 1.02, y: -2 }}
                       whileTap={{ scale: 0.98 }}
                     >
@@ -819,10 +819,10 @@ export default function Home() {
                           {suggestion.icon}
                         </motion.div>
                         <div>
-                          <h4 className={`font-semibold ${themeClasses.textPrimary} mb-1`}>
+                          <h4 className="font-semibold text-white mb-1">
                             {suggestion.name}
                           </h4>
-                          <p className={`text-sm ${themeClasses.textMuted}`}>
+                          <p className="text-sm text-slate-300">
                             {suggestion.desc}
                           </p>
                         </div>
@@ -901,6 +901,7 @@ export default function Home() {
           } rounded-full blur-sm`} />
         </motion.div>
       ))}
+
     </div>
   );
 }

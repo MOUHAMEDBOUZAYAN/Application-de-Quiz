@@ -208,7 +208,7 @@ export default function Quiz() {
   // Rendu des états de chargement et d'erreur
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-indigo-50">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
         <motion.div 
           className="text-center p-8"
           initial={{ opacity: 0, scale: 0.8 }}
@@ -218,10 +218,10 @@ export default function Quiz() {
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-            className="w-16 h-16 border-4 border-indigo-200 border-t-indigo-600 rounded-full mx-auto mb-4"
+            className="w-16 h-16 border-4 border-slate-600 border-t-blue-500 mx-auto mb-4"
           />
-          <p className="text-indigo-600 text-xl font-medium">Chargement des questions...</p>
-          <p className="text-gray-500 text-sm mt-2">Préparation de votre quiz personnalisé</p>
+          <p className="text-blue-400 text-xl font-medium">Chargement des questions...</p>
+          <p className="text-slate-400 text-sm mt-2">Préparation de votre quiz personnalisé</p>
         </motion.div>
       </div>
     );
@@ -229,27 +229,27 @@ export default function Quiz() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-red-50 p-4">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4">
         <motion.div 
-          className="text-center p-8 bg-white rounded-2xl shadow-xl max-w-md w-full"
+          className="text-center p-8 bg-slate-800 shadow-xl max-w-md w-full"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <FiRefreshCw className="text-red-600 text-2xl" />
+          <div className="w-16 h-16 bg-red-500/20 flex items-center justify-center mx-auto mb-4">
+            <FiRefreshCw className="text-red-400 text-2xl" />
           </div>
-          <h2 className="text-xl font-bold text-gray-800 mb-2">Erreur de Chargement</h2>
-          <p className="text-red-600 mb-6">{error}</p>
+          <h2 className="text-xl font-bold text-white mb-2">Erreur de Chargement</h2>
+          <p className="text-red-400 mb-6">{error}</p>
           <div className="space-y-3">
             <button
               onClick={() => window.location.reload()}
-              className="w-full bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors font-medium"
+              className="w-full bg-indigo-600 text-white px-6 py-3 hover:bg-indigo-700 transition-colors font-medium"
             >
               Réessayer
             </button>
             <button
               onClick={() => navigate('/')}
-              className="w-full bg-gray-100 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-200 transition-colors font-medium"
+              className="w-full bg-slate-700 text-slate-300 px-6 py-3 hover:bg-slate-600 transition-colors font-medium"
             >
               Retour à l'accueil
             </button>
@@ -261,8 +261,8 @@ export default function Quiz() {
 
   if (!quizState.questions.length) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-indigo-50">
-        <div className="text-center p-8 text-gray-500 text-xl">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+        <div className="text-center p-8 text-slate-400 text-xl">
           Aucune question disponible
         </div>
       </div>
@@ -270,11 +270,11 @@ export default function Quiz() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-indigo-50 py-4 px-4 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-4 px-4 relative overflow-hidden">
       {/* Éléments de fond animés */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div 
-          className="absolute top-20 left-10 w-32 h-32 bg-indigo-300/20 rounded-full blur-3xl"
+          className="absolute top-20 left-10 w-32 h-32 bg-blue-500/10 blur-3xl"
           animate={{ 
             scale: [1, 1.2, 1],
             opacity: [0.3, 0.5, 0.3]
@@ -282,7 +282,7 @@ export default function Quiz() {
           transition={{ duration: 4, repeat: Infinity }}
         />
         <motion.div 
-          className="absolute bottom-32 right-10 w-40 h-40 bg-purple-300/15 rounded-full blur-3xl"
+          className="absolute bottom-32 right-10 w-40 h-40 bg-purple-500/10 blur-3xl"
           animate={{ 
             scale: [1.2, 1, 1.2],
             opacity: [0.2, 0.4, 0.2]
@@ -295,35 +295,35 @@ export default function Quiz() {
       <div className="relative z-10 w-full max-w-4xl mx-auto">
         {/* Header avec contrôles */}
         <motion.div 
-          className="bg-white/90 backdrop-blur-md border border-white/20 rounded-2xl shadow-lg p-4 mb-6"
+          className="bg-slate-800/90 backdrop-blur-md border border-slate-700 shadow-lg p-4 mb-6"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-3 text-gray-700 font-medium">
-                <div className="w-10 h-10 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
+              <div className="flex items-center space-x-3 text-white font-medium">
+                <div className="w-10 h-10 bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center text-white font-semibold">
                   {name.charAt(0).toUpperCase()}
                 </div>
                 <span className="hidden sm:inline">{name}</span>
               </div>
               
-              <div className="flex items-center space-x-2 bg-indigo-100 px-3 py-1 rounded-full">
-                <FiAward className="text-indigo-600" />
-                <span className="text-indigo-700 font-semibold text-sm">
+              <div className="flex items-center space-x-2 bg-indigo-500/20 px-3 py-1">
+                <FiAward className="text-indigo-400" />
+                <span className="text-indigo-300 font-semibold text-sm">
                   {quizState.score}/{currentQuestionNumber - 1}
                 </span>
               </div>
 
               {quizState.streak > 0 && (
                 <motion.div 
-                  className="flex items-center space-x-1 bg-yellow-100 px-3 py-1 rounded-full"
+                  className="flex items-center space-x-1 bg-yellow-500/20 px-3 py-1"
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   key={quizState.streak}
                 >
-                  <span className="text-yellow-600 text-sm">🔥</span>
-                  <span className="text-yellow-700 font-semibold text-sm">
+                  <span className="text-yellow-400 text-sm">🔥</span>
+                  <span className="text-yellow-300 font-semibold text-sm">
                     {quizState.streak}
                   </span>
                 </motion.div>
@@ -333,34 +333,34 @@ export default function Quiz() {
             <div className="flex items-center space-x-2">
               <button
                 onClick={() => setSoundEnabled(!soundEnabled)}
-                className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
+                className="p-2 bg-slate-700 hover:bg-slate-600 transition-colors"
                 title={soundEnabled ? 'Désactiver le son' : 'Activer le son'}
               >
-                {soundEnabled ? <FiVolume2 className="text-gray-600" /> : <FiVolumeX className="text-gray-400" />}
+                {soundEnabled ? <FiVolume2 className="text-slate-300" /> : <FiVolumeX className="text-slate-500" />}
               </button>
 
               <button
                 onClick={() => setHintsEnabled(!hintsEnabled)}
-                className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
+                className="p-2 bg-slate-700 hover:bg-slate-600 transition-colors"
                 title={hintsEnabled ? 'Désactiver les indices' : 'Activer les indices'}
               >
-                {hintsEnabled ? <FiEye className="text-gray-600" /> : <FiEyeOff className="text-gray-400" />}
+                {hintsEnabled ? <FiEye className="text-slate-300" /> : <FiEyeOff className="text-slate-500" />}
               </button>
 
               <button
                 onClick={togglePause}
-                className="p-2 rounded-lg bg-blue-100 hover:bg-blue-200 transition-colors"
+                className="p-2 bg-blue-600/20 hover:bg-blue-600/30 transition-colors"
                 title={quizState.isPaused ? 'Reprendre' : 'Mettre en pause'}
               >
-                {quizState.isPaused ? <FiPlay className="text-blue-600" /> : <FiPause className="text-blue-600" />}
+                {quizState.isPaused ? <FiPlay className="text-blue-400" /> : <FiPause className="text-blue-400" />}
               </button>
 
               <button
                 onClick={quitQuiz}
-                className="p-2 rounded-lg bg-red-100 hover:bg-red-200 transition-colors"
+                className="p-2 bg-red-600/20 hover:bg-red-600/30 transition-colors"
                 title="Quitter le quiz"
               >
-                <FiHome className="text-red-600" />
+                <FiHome className="text-red-400" />
               </button>
             </div>
           </div>
@@ -405,13 +405,13 @@ export default function Quiz() {
               exit={{ opacity: 0, scale: 0.9 }}
               className="flex items-center justify-center min-h-[400px]"
             >
-              <div className="text-center bg-white/90 backdrop-blur-md rounded-2xl p-8 shadow-xl">
-                <FiPause className="text-4xl text-blue-600 mx-auto mb-4" />
-                <h2 className="text-2xl font-bold text-gray-800 mb-2">Quiz en Pause</h2>
-                <p className="text-gray-600 mb-6">Prenez votre temps, nous vous attendons!</p>
+              <div className="text-center bg-slate-800/90 backdrop-blur-md p-8 shadow-xl">
+                <FiPause className="text-4xl text-blue-400 mx-auto mb-4" />
+                <h2 className="text-2xl font-bold text-white mb-2">Quiz en Pause</h2>
+                <p className="text-slate-300 mb-6">Prenez votre temps, nous vous attendons!</p>
                 <button
                   onClick={togglePause}
-                  className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                  className="bg-blue-600 text-white px-8 py-3 hover:bg-blue-700 transition-colors font-medium"
                 >
                   Reprendre le Quiz
                 </button>

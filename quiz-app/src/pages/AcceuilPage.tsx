@@ -132,30 +132,6 @@ export default function AcceuilPage() {
   };
 
   // Animations pour les éléments
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { y: 30, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        type: 'spring',
-        stiffness: 100,
-        damping: 12
-      }
-    }
-  };
-
   const floatingVariants = {
     float: {
       y: [-20, 20, -20],
@@ -236,18 +212,20 @@ export default function AcceuilPage() {
       </div>
 
       {/* Section Hero */}
-      <section className="relative z-10 min-h-screen flex items-center justify-center px-4 py-20">
+      <section className="relative z-10 min-h-screen flex items-center justify-center px-4 py-10 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" style={{ zIndex: 100 }}>
         <motion.div
-          className="text-center max-w-6xl mx-auto"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
+          className="text-center max-w-6xl mx-auto relative z-20"
+          initial={{ opacity: 1 }}
+          animate={{ opacity: 1 }}
+          style={{ minHeight: '80vh', zIndex: 200, position: 'relative' }}
         >
           {/* Badge de nouveauté avec style sombre */}
           <motion.div
             className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 px-6 py-2 mb-8 backdrop-blur-sm"
-            variants={itemVariants}
+            initial={{ opacity: 1 }}
+            animate={{ opacity: 1 }}
             whileHover={{ scale: 1.05 }}
+            style={{ zIndex: 300, position: 'relative' }}
           >
             <FiGift className="text-blue-400" />
             <span className="text-sm font-semibold text-white">
@@ -260,8 +238,10 @@ export default function AcceuilPage() {
 
           {/* Titre principal avec style sombre - taille réduite */}
           <motion.h1 
-            className="text-4xl md:text-6xl font-extrabold mb-8 text-white"
-            variants={itemVariants}
+            className="text-3xl md:text-5xl font-extrabold mb-6 text-white relative z-30"
+            initial={{ opacity: 1 }}
+            animate={{ opacity: 1 }}
+            style={{ zIndex: 300, position: 'relative' }}
           >
             <motion.span
               className="inline-block bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent"
@@ -291,8 +271,10 @@ export default function AcceuilPage() {
 
           {/* Sous-titre avec style sombre - taille réduite */}
           <motion.p 
-            className="text-lg md:text-xl mb-12 max-w-3xl mx-auto leading-relaxed text-slate-300"
-            variants={itemVariants}
+            className="text-base md:text-lg mb-8 max-w-3xl mx-auto leading-relaxed text-slate-300"
+            initial={{ opacity: 1 }}
+            animate={{ opacity: 1 }}
+            style={{ zIndex: 300, position: 'relative' }}
           >
             L'expérience de quiz la plus avancée au monde. Intelligence artificielle, 
             compétitions en temps réel, et progression personnalisée pour 
@@ -307,14 +289,17 @@ export default function AcceuilPage() {
 
           {/* Boutons d'action */}
           <motion.div 
-            className="flex flex-col sm:flex-row gap-6 justify-center mb-16"
-            variants={itemVariants}
+            className="flex flex-col sm:flex-row gap-4 justify-center mb-8"
+            initial={{ opacity: 1 }}
+            animate={{ opacity: 1 }}
+            style={{ zIndex: 200, position: 'relative' }}
           >
             <motion.button
               onClick={handleGetStarted}
               className="group relative px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold text-base shadow-2xl overflow-hidden border border-blue-400/30"
               whileHover={{ scale: 1.05, y: -3 }}
               whileTap={{ scale: 0.95 }}
+              style={{ zIndex: 50 }}
             >
               {/* Effet de lueur animé */}
               <motion.div
@@ -342,6 +327,7 @@ export default function AcceuilPage() {
               className="px-8 py-3 bg-slate-800/50 backdrop-blur-sm text-white border-2 border-blue-500/30 font-bold text-base hover:border-blue-400 transition-all"
               whileHover={{ scale: 1.05, y: -3 }}
               whileTap={{ scale: 0.95 }}
+              style={{ zIndex: 50 }}
             >
               <div className="flex items-center gap-3">
                 <FiTarget className="text-xl" />
@@ -352,19 +338,21 @@ export default function AcceuilPage() {
 
           {/* Statistiques avec style sombre */}
           <motion.div 
-            className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto"
-            variants={containerVariants}
+            className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto"
+            initial={{ opacity: 1 }}
+            animate={{ opacity: 1 }}
+            style={{ zIndex: 200, position: 'relative' }}
           >
             {stats.map((stat, index) => (
               <motion.div
                 key={index}
-                className="bg-slate-800/50 backdrop-blur-xl p-6 rounded-2xl border border-slate-700/50 group cursor-default"
-                variants={itemVariants}
+                className="bg-slate-800/50 backdrop-blur-xl p-4 border border-slate-700/50 group cursor-default"
+                initial={{ opacity: 1 }}
+                animate={{ opacity: 1 }}
                 whileHover={{ scale: 1.05, y: -5 }}
-                transition={{ type: "spring", stiffness: 300 }}
               >
                 <motion.div 
-                  className={`w-12 h-12 bg-gradient-to-r ${stat.color} rounded-xl flex items-center justify-center text-white mb-4 mx-auto group-hover:scale-110 transition-transform`}
+                  className={`w-12 h-12 bg-gradient-to-r ${stat.color} flex items-center justify-center text-white mb-4 mx-auto group-hover:scale-110 transition-transform`}
                 >
                   {stat.icon}
                 </motion.div>
@@ -385,7 +373,7 @@ export default function AcceuilPage() {
       </section>
 
       {/* Section Fonctionnalités */}
-      <section className="relative z-10 py-20 px-4">
+      <section className="relative z-10 py-20 px-4 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
         <div className="max-w-7xl mx-auto">
           <motion.div
             className="text-center mb-16"
@@ -613,7 +601,7 @@ export default function AcceuilPage() {
       </section>
 
       {/* Call to Action Final */}
-      <section className="relative z-10 py-20 px-4">
+      <section className="relative z-10 py-20 px-4 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div
             className="bg-slate-800/50 backdrop-blur-xl p-12 border border-slate-700/50 relative overflow-hidden"
@@ -787,7 +775,7 @@ export default function AcceuilPage() {
       </section>
 
       {/* Section bonus - Flottants décoratifs */}
-      <div className="fixed bottom-8 right-8 z-20 pointer-events-none">
+      <div className="fixed bottom-8 right-8 z-10 pointer-events-none">
         <motion.div
           variants={floatingVariants}
           animate="float"
@@ -797,7 +785,7 @@ export default function AcceuilPage() {
         </motion.div>
       </div>
 
-      <div className="fixed bottom-8 left-8 z-20 pointer-events-none">
+      <div className="fixed bottom-8 left-8 z-10 pointer-events-none">
         <motion.div
           variants={floatingVariants}
           animate="float"
@@ -810,7 +798,7 @@ export default function AcceuilPage() {
 
       {/* Éléments flottants pour l'interaction */}
       <motion.div
-        className="fixed top-1/4 right-4 z-20 pointer-events-none"
+        className="fixed top-1/4 right-4 z-10 pointer-events-none"
         animate={{ 
           y: [0, -20, 0],
           rotate: [0, 10, -10, 0]
@@ -827,7 +815,7 @@ export default function AcceuilPage() {
       </motion.div>
 
       <motion.div
-        className="fixed top-1/2 left-4 z-20 pointer-events-none"
+        className="fixed top-1/2 left-4 z-10 pointer-events-none"
         animate={{ 
           y: [0, 15, 0],
           rotate: [0, -10, 10, 0]
@@ -872,7 +860,7 @@ export default function AcceuilPage() {
 
       {/* Indicateur de scroll */}
       <motion.div
-        className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-20"
+        className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-10"
         animate={{ y: [0, 10, 0] }}
         transition={{ duration: 2, repeat: Infinity }}
       >

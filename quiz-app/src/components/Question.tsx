@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { QuestionState } from '../types/quizTypes';
-import { useTheme, useThemeClasses } from '../contexts/ThemeContext';
+// import { useTheme, useThemeClasses } from '../contexts/ThemeContext';
 import { 
   FiClock, FiCheck, FiX, FiZap, FiStar,
   FiTarget, FiEye
@@ -41,8 +41,8 @@ export default function Question({
   const [isTimeUp, setIsTimeUp] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
 
-  const { resolvedTheme } = useTheme();
-  const themeClasses = useThemeClasses();
+  // const { resolvedTheme } = useTheme();
+  // const themeClasses = useThemeClasses();
 
   // Réinitialiser l'état pour une nouvelle question
   useEffect(() => {
@@ -119,10 +119,10 @@ export default function Question({
   }, [isAnswered, isTimeUp, question.correct_answer, startTime, onAnswer, autoNext, streak]);
 
   const getAnswerClass = (answer: string) => {
-    const baseClass = "group relative w-full text-left p-5 rounded-2xl transition-all duration-300 border-2 font-medium transform";
+    const baseClass = "group relative w-full text-left p-5 transition-all duration-300 border-2 font-medium transform";
     
     if (!isAnswered && !isTimeUp) {
-      return `${baseClass} ${themeClasses.border} ${themeClasses.bgPrimary} hover:border-indigo-400 dark:hover:border-indigo-500 hover:shadow-lg hover:scale-[1.02] cursor-pointer hover:-translate-y-1`;
+      return `${baseClass} border-slate-600 bg-slate-700/50 hover:border-indigo-400 hover:shadow-lg hover:scale-[1.02] cursor-pointer hover:-translate-y-1 text-white`;
     }
     
     if (answer === question.correct_answer) {
@@ -133,7 +133,7 @@ export default function Question({
       return `${baseClass} border-red-500 bg-gradient-to-r from-red-500 to-pink-600 text-white shadow-lg animate-shake`;
     }
     
-    return `${baseClass} ${themeClasses.border} ${themeClasses.bgTertiary} ${themeClasses.textMuted} opacity-60`;
+    return `${baseClass} border-slate-600 bg-slate-700/50 text-slate-400 opacity-60`;
   };
 
   const getTimeColor = () => {
@@ -154,10 +154,10 @@ export default function Question({
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case 'easy': return 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border-green-200 dark:border-green-700';
-      case 'medium': return 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 border-yellow-200 dark:border-yellow-700';
-      case 'hard': return 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 border-red-200 dark:border-red-700';
-      default: return 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 border-gray-200 dark:border-gray-600';
+      case 'easy': return 'bg-green-500/20 text-green-300 border-green-500';
+      case 'medium': return 'bg-yellow-500/20 text-yellow-300 border-yellow-500';
+      case 'hard': return 'bg-red-500/20 text-red-300 border-red-500';
+      default: return 'bg-slate-700 text-slate-300 border-slate-600';
     }
   };
 
@@ -185,7 +185,7 @@ export default function Question({
 
   return (
     <motion.div 
-      className={`${themeClasses.bgCard} rounded-3xl ${themeClasses.shadow} border ${themeClasses.border} overflow-hidden backdrop-blur-xl`}
+      className="bg-slate-800 shadow-xl border border-slate-700 overflow-hidden backdrop-blur-xl"
       initial={{ opacity: 0, y: 20, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
@@ -235,7 +235,7 @@ export default function Question({
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
               <motion.div 
-                className="flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full border border-white/30"
+                className="flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 border border-white/30"
                 whileHover={{ scale: 1.05 }}
               >
                 <Brain className="text-yellow-300" />
@@ -245,7 +245,7 @@ export default function Question({
               </motion.div>
               
               <motion.div 
-                className={`flex items-center gap-2 px-3 py-1 rounded-full border ${getDifficultyColor(question.difficulty)} text-xs font-semibold`}
+                className={`flex items-center gap-2 px-3 py-1 border ${getDifficultyColor(question.difficulty)} text-xs font-semibold`}
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.3 }}
@@ -257,7 +257,7 @@ export default function Question({
               {/* Bonus de série */}
               {streakBonus && (
                 <motion.div
-                  className={`flex items-center gap-2 bg-gradient-to-r ${streakBonus.color} px-3 py-1 rounded-full text-white text-xs font-bold shadow-lg`}
+                  className={`flex items-center gap-2 bg-gradient-to-r ${streakBonus.color} px-3 py-1 text-white text-xs font-bold shadow-lg`}
                   initial={{ scale: 0, rotate: -180 }}
                   animate={{ scale: 1, rotate: 0 }}
                   transition={{ type: "spring", bounce: 0.6 }}
@@ -272,7 +272,7 @@ export default function Question({
               {showHints && !isAnswered && !isTimeUp && (
                 <motion.button
                   onClick={() => setShowHint(true)}
-                  className="flex items-center gap-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm px-4 py-2 rounded-full border border-white/30 transition-all text-sm font-medium"
+                  className="flex items-center gap-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm px-4 py-2 border border-white/30 transition-all text-sm font-medium"
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -298,9 +298,9 @@ export default function Question({
           </div>
 
           {/* Barre de progression du temps */}
-          <div className="relative w-full bg-white/20 rounded-full h-3 overflow-hidden backdrop-blur-sm">
+          <div className="relative w-full bg-white/20 h-3 overflow-hidden backdrop-blur-sm">
             <motion.div
-              className={`h-full rounded-full bg-gradient-to-r ${getTimeColor()} shadow-lg`}
+              className={`h-full bg-gradient-to-r ${getTimeColor()} shadow-lg`}
               initial={{ width: '100%' }}
               animate={{ width: `${(timeLeft / timeLimit) * 100}%` }}
               transition={{ duration: 0.3 }}
@@ -309,7 +309,7 @@ export default function Question({
             {/* Indicateur de danger */}
             {timeLeft <= 10 && (
               <motion.div
-                className="absolute inset-0 bg-red-400/20 rounded-full"
+                className="absolute inset-0 bg-red-400/20"
                 animate={{ opacity: [0, 0.5, 0] }}
                 transition={{ duration: 0.5, repeat: Infinity }}
               />
@@ -334,14 +334,14 @@ export default function Question({
         >
           <div className="flex items-start gap-4 mb-6">
             <motion.div 
-              className="flex-shrink-0 w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center text-white font-bold text-lg shadow-lg"
+              className="flex-shrink-0 w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg shadow-lg"
               whileHover={{ rotate: 360 }}
               transition={{ duration: 0.6 }}
             >
               Q
             </motion.div>
             <h3 
-              className={`text-xl lg:text-2xl font-bold ${themeClasses.textPrimary} leading-relaxed`}
+              className="text-xl lg:text-2xl font-bold text-white leading-relaxed"
               dangerouslySetInnerHTML={{ __html: question.question }} 
             />
           </div>
@@ -354,7 +354,7 @@ export default function Question({
               initial={{ opacity: 0, height: 0, y: -20 }}
               animate={{ opacity: 1, height: 'auto', y: 0 }}
               exit={{ opacity: 0, height: 0, y: -20 }}
-              className={`mb-8 p-6 ${themeClasses.bgSecondary} border-l-4 border-yellow-500 rounded-r-2xl ${themeClasses.shadow}`}
+              className="mb-8 p-6 bg-slate-700/50 border-l-4 border-yellow-500 shadow-lg"
             >
               <div className="flex items-start gap-3">
                 <motion.div
@@ -364,13 +364,13 @@ export default function Question({
                   <FaLightbulb className="text-yellow-500 text-xl mt-1 flex-shrink-0" />
                 </motion.div>
                 <div>
-                  <h4 className={`font-semibold ${themeClasses.textPrimary} mb-2 flex items-center gap-2`}>
+                  <h4 className="font-semibold text-white mb-2 flex items-center gap-2">
                     Indice Intelligent
-                    <span className="text-xs bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 px-2 py-1 rounded-full">
+                    <span className="text-xs bg-yellow-500/20 text-yellow-300 px-2 py-1">
                       IA
                     </span>
                   </h4>
-                  <p className={`${themeClasses.textSecondary}`}>{getHint()}</p>
+                  <p className="text-slate-300">{getHint()}</p>
                 </div>
               </div>
             </motion.div>
@@ -390,9 +390,7 @@ export default function Question({
               transition={{ delay: 0.3 + index * 0.1 }}
               whileHover={!isAnswered && !isTimeUp ? { 
                 scale: 1.02,
-                boxShadow: resolvedTheme === 'dark' 
-                  ? "0 10px 30px rgba(99, 102, 241, 0.3)" 
-                  : "0 10px 30px rgba(99, 102, 241, 0.2)"
+                boxShadow: "0 10px 30px rgba(99, 102, 241, 0.3)"
               } : {}}
               style={{
                 animationDelay: `${index * 100}ms`
@@ -401,14 +399,14 @@ export default function Question({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <motion.div 
-                    className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold transition-all ${
+                    className={`w-10 h-10 flex items-center justify-center text-sm font-bold transition-all ${
                       !isAnswered && !isTimeUp 
-                        ? `${themeClasses.bgSecondary} ${themeClasses.textSecondary} group-hover:bg-indigo-500 group-hover:text-white` 
+                        ? 'bg-slate-700 text-slate-300 group-hover:bg-indigo-500 group-hover:text-white' 
                         : answer === question.correct_answer 
                           ? 'bg-white/20 text-white' 
                           : answer === selectedAnswer 
                             ? 'bg-white/20 text-white' 
-                            : `${themeClasses.bgTertiary} ${themeClasses.textMuted}`
+                            : 'bg-slate-700/50 text-slate-400'
                     }`}
                     whileHover={!isAnswered && !isTimeUp ? { scale: 1.1 } : {}}
                   >
@@ -445,7 +443,7 @@ export default function Question({
               {/* Effet de hover pour les réponses non répondues */}
               {!isAnswered && !isTimeUp && (
                 <motion.div 
-                  className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+                  className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
                 />
               )}
             </motion.button>
@@ -454,7 +452,7 @@ export default function Question({
 
         {/* Informations supplémentaires */}
         <motion.div 
-          className={`mt-8 pt-6 border-t ${themeClasses.border}`}
+          className="mt-8 pt-6 border-t border-slate-600"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
@@ -463,14 +461,14 @@ export default function Question({
             <div className="flex items-center gap-6 text-sm">
               <div className="flex items-center gap-2">
                 <FiTarget className="text-indigo-500" />
-                <span className={themeClasses.textSecondary}>
-                  Catégorie: <strong className={themeClasses.textPrimary}>{question.category}</strong>
+                <span className="text-slate-300">
+                  Catégorie: <strong className="text-white">{question.category}</strong>
                 </span>
               </div>
               <div className="flex items-center gap-2">
                 <FiEye className="text-purple-500" />
-                <span className={themeClasses.textSecondary}>
-                  Type: <strong className={themeClasses.textPrimary}>
+                <span className="text-slate-300">
+                  Type: <strong className="text-white">
                     {question.type === 'multiple' ? 'QCM' : 'Vrai/Faux'}
                   </strong>
                 </span>
@@ -479,7 +477,7 @@ export default function Question({
             
             {!isAnswered && !isTimeUp && (
               <motion.div 
-                className={`text-xs ${themeClasses.textMuted} bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 px-3 py-2 rounded-full`}
+                className="text-xs text-slate-400 bg-slate-700 px-3 py-2"
                 animate={{ opacity: [0.5, 1, 0.5] }}
                 transition={{ duration: 2, repeat: Infinity }}
               >
@@ -496,7 +494,7 @@ export default function Question({
               initial={{ opacity: 0, scale: 0.8, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.8, y: -20 }}
-              className={`mt-6 p-6 bg-gradient-to-r from-red-500 to-pink-600 rounded-2xl text-white text-center shadow-xl`}
+              className="mt-6 p-6 bg-gradient-to-r from-red-500 to-pink-600 text-white text-center shadow-xl"
             >
               <div className="flex items-center justify-center gap-3 mb-3">
                 <motion.div
@@ -510,7 +508,7 @@ export default function Question({
               <p className="text-red-100 mb-3">
                 Ne vous inquiétez pas, c'était une question difficile !
               </p>
-              <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3 border border-white/30">
+              <div className="bg-white/20 backdrop-blur-sm p-3 border border-white/30">
                 <p className="text-sm">
                   💡 La bonne réponse était : <strong className="text-yellow-200">{question.correct_answer}</strong>
                 </p>

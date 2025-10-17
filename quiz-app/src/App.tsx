@@ -16,9 +16,11 @@ function App() {
   return (
     <Router>
       <ThemeProvider>
-        <div className="flex flex-col min-h-screen bg-gray-50">
-          <Navbar />
-          <main className="flex-grow">
+        <div className="flex flex-col min-h-screen bg-gray-50 overflow-x-hidden">
+          <div className="navbar-container">
+            <Navbar />
+          </div>
+          <main className="flex-grow w-full">
             <Routes>
               <Route path="/" element={<HeroSection />} />
               <Route element={<Layout />}>
