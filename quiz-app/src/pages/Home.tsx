@@ -39,7 +39,7 @@ export default function Home() {
     difficulty: 'mixed',
     questionCount: 10,
     timeLimit: 30,
-    type: 'mixed'
+    type: 'boolean'
   });
   const [, setStoredName] = useLocalStorage('quizUserName', '');
   const [isLoading, setIsLoading] = useState(false);
@@ -97,7 +97,7 @@ export default function Home() {
         difficulty: quizOptions.difficulty === 'mixed' ? null : quizOptions.difficulty,
         questionCount: quizOptions.questionCount,
         timeLimit: quizOptions.timeLimit,
-        type: quizOptions.type === 'mixed' ? null : quizOptions.type
+        type: quizOptions.type
       }
     });
   };

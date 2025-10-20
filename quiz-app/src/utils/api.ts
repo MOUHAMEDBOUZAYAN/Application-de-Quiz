@@ -297,7 +297,7 @@ export const getGlobalStats = async (): Promise<{
 // Fonction pour récupérer des questions avec retry automatique
 export const fetchQuizQuestionsWithRetry = async (
   params: QuizParams,
-  maxRetries: number = 3
+  maxRetries: number = 5
 ): Promise<QuestionState[]> => {
   let lastError: Error;
   
@@ -307,10 +307,19 @@ export const fetchQuizQuestionsWithRetry = async (
     } catch (error) {
       lastError = error as Error;
       
-      if (error instanceof ApiError && error.responseCode === 4) {
-        // Token vide, essayer sans token
-        const { sessionToken, ...paramsWithoutToken } = params as any;
-        return await fetchQuizQuestions(paramsWithoutToken);
+      // Gérer les erreurs spécifiques
+      if (error instanceof ApiError) {
+        if (error.responseCode === 4) {
+          // Token vide, essayer sans token
+          const { sessionToken, ...paramsWithoutToken } = params as any;
+          return await fetchQuizQuestions(paramsWithoutToken);
+        }
+        
+        if (error.message.includes('429') || error.message.includes('Too Many Requests')) {
+          // Pour les erreurs 429, utiliser directement les questions par défaut
+          console.log('Erreur 429 détectée, utilisation des questions par défaut');
+          return generateDefaultQuestions(params.amount);
+        }
       }
       
       if (attempt === maxRetries) {
@@ -318,11 +327,162 @@ export const fetchQuizQuestionsWithRetry = async (
       }
       
       // Attendre avant de réessayer (backoff exponentiel)
-      await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
+      const delay = Math.min(Math.pow(2, attempt) * 1500, 15000); // Max 15 secondes
+      console.log(`Tentative ${attempt} échouée, attente de ${delay/1000}s avant la tentative ${attempt + 1}`);
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+  
+  // Si toutes les tentatives ont échoué, essayer avec des paramètres plus flexibles
+  if (lastError instanceof ApiError && lastError.message.includes('Pas assez de questions')) {
+    console.log('Tentative avec des paramètres plus flexibles...');
+    
+    // Essayer sans spécifier le type
+    const flexibleParams = { ...params };
+    delete flexibleParams.type;
+    
+    try {
+      return await fetchQuizQuestions(flexibleParams);
+    } catch (flexibleError) {
+      console.log('Tentative flexible échouée, utilisation des questions par défaut');
+      
+      // Retourner des questions par défaut en cas d'échec total
+      return generateDefaultQuestions(params.amount);
     }
   }
   
   throw lastError!;
+};
+
+// Générer des questions par défaut en cas d'échec de l'API
+const generateDefaultQuestions = (amount: number): QuestionState[] => {
+  const defaultQuestions: QuestionState[] = [
+    // Questions Vrai/Faux
+    {
+      category: "Culture Générale",
+      type: "boolean",
+      difficulty: "easy",
+      question: "Le soleil se lève à l'est.",
+      correct_answer: "True",
+      incorrect_answers: ["False"],
+      answers: ["True", "False"]
+    },
+    {
+      category: "Histoire",
+      type: "boolean",
+      difficulty: "easy",
+      question: "Napoléon Bonaparte est né en Corse.",
+      correct_answer: "True",
+      incorrect_answers: ["False"],
+      answers: ["True", "False"]
+    },
+    {
+      category: "Science",
+      type: "boolean",
+      difficulty: "medium",
+      question: "L'eau bout à 100°C au niveau de la mer.",
+      correct_answer: "True",
+      incorrect_answers: ["False"],
+      answers: ["True", "False"]
+    },
+    {
+      category: "Géographie",
+      type: "boolean",
+      difficulty: "medium",
+      question: "Le Mont Everest est la plus haute montagne du monde.",
+      correct_answer: "True",
+      incorrect_answers: ["False"],
+      answers: ["True", "False"]
+    },
+    {
+      category: "Culture Générale",
+      type: "boolean",
+      difficulty: "hard",
+      question: "Shakespeare a écrit 'Roméo et Juliette'.",
+      correct_answer: "True",
+      incorrect_answers: ["False"],
+      answers: ["True", "False"]
+    },
+    // Questions QCM
+    {
+      category: "Culture Générale",
+      type: "multiple",
+      difficulty: "easy",
+      question: "Quelle est la capitale de la France ?",
+      correct_answer: "Paris",
+      incorrect_answers: ["Lyon", "Marseille", "Toulouse"],
+      answers: ["Paris", "Lyon", "Marseille", "Toulouse"]
+    },
+    {
+      category: "Science",
+      type: "multiple",
+      difficulty: "easy",
+      question: "Quel est le symbole chimique de l'or ?",
+      correct_answer: "Au",
+      incorrect_answers: ["Ag", "Fe", "Cu"],
+      answers: ["Au", "Ag", "Fe", "Cu"]
+    },
+    {
+      category: "Géographie",
+      type: "multiple",
+      difficulty: "medium",
+      question: "Quel est le plus grand océan du monde ?",
+      correct_answer: "Pacifique",
+      incorrect_answers: ["Atlantique", "Indien", "Arctique"],
+      answers: ["Pacifique", "Atlantique", "Indien", "Arctique"]
+    },
+    {
+      category: "Histoire",
+      type: "multiple",
+      difficulty: "medium",
+      question: "En quelle année a eu lieu la Révolution française ?",
+      correct_answer: "1789",
+      incorrect_answers: ["1776", "1792", "1804"],
+      answers: ["1789", "1776", "1792", "1804"]
+    },
+    {
+      category: "Science",
+      type: "multiple",
+      difficulty: "hard",
+      question: "Quelle est la vitesse de la lumière dans le vide ?",
+      correct_answer: "299 792 458 m/s",
+      incorrect_answers: ["300 000 000 m/s", "299 000 000 m/s", "300 792 458 m/s"],
+      answers: ["299 792 458 m/s", "300 000 000 m/s", "299 000 000 m/s", "300 792 458 m/s"]
+    },
+    {
+      category: "Culture Générale",
+      type: "multiple",
+      difficulty: "hard",
+      question: "Qui a peint 'La Joconde' ?",
+      correct_answer: "Léonard de Vinci",
+      incorrect_answers: ["Michel-Ange", "Raphaël", "Botticelli"],
+      answers: ["Léonard de Vinci", "Michel-Ange", "Raphaël", "Botticelli"]
+    },
+    {
+      category: "Géographie",
+      type: "multiple",
+      difficulty: "hard",
+      question: "Quel est le plus grand pays du monde par superficie ?",
+      correct_answer: "Russie",
+      incorrect_answers: ["Canada", "Chine", "États-Unis"],
+      answers: ["Russie", "Canada", "Chine", "États-Unis"]
+    }
+  ];
+
+  // Mélanger les questions et en sélectionner le nombre demandé
+  const shuffledQuestions = shuffleArray(defaultQuestions);
+  const questions: QuestionState[] = [];
+  
+  for (let i = 0; i < amount; i++) {
+    const question = { ...shuffledQuestions[i % shuffledQuestions.length] };
+    // Mélanger les réponses pour les questions QCM
+    if (question.type === "multiple") {
+      question.answers = shuffleArray([question.correct_answer, ...question.incorrect_answers]);
+    }
+    questions.push(question);
+  }
+
+  return questions;
 };
 
 // Export des fonctions principales

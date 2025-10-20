@@ -28,6 +28,7 @@ interface QuizSettings {
   category?: number;
   questionCount: number;
   timeLimit: number;
+  type?: 'multiple' | 'boolean' | 'mixed';
 }
 
 export default function Quiz() {
@@ -102,9 +103,18 @@ export default function Quiz() {
           amount: quizSettings.questionCount,
           difficulty: quizSettings.difficulty,
           category: quizSettings.category,
+          type: quizSettings.type === 'mixed' ? undefined : quizSettings.type,
         };
 
+        console.log('Chargement des questions avec les paramètres:', params);
         const questions = await fetchQuizQuestionsWithRetry(params);
+        console.log(`${questions.length} questions chargées avec succès`);
+        
+        // Vérifier si on utilise des questions par défaut
+        if (questions.length > 0 && questions[0].category === "Culture Générale" && 
+            questions[0].question === "Le soleil se lève à l'est.") {
+          console.log('Utilisation des questions par défaut en raison de limitations API');
+        }
         
         setQuizState(prev => ({
           ...prev,
@@ -112,14 +122,27 @@ export default function Quiz() {
           startTime: Date.now(),
         }));
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Erreur lors du chargement des questions');
+        console.error('Erreur lors du chargement des questions:', err);
+        
+        let errorMessage = 'Erreur lors du chargement des questions';
+        if (err instanceof Error) {
+          if (err.message.includes('429') || err.message.includes('Too Many Requests')) {
+            errorMessage = 'Trop de requêtes vers le serveur. Veuillez patienter quelques instants et réessayer.';
+          } else if (err.message.includes('Pas assez de questions')) {
+            errorMessage = 'Pas assez de questions disponibles pour ces critères. Essayez avec d\'autres paramètres.';
+          } else {
+            errorMessage = err.message;
+          }
+        }
+        
+        setError(errorMessage);
       } finally {
         setLoading(false);
       }
     };
 
     loadQuestions();
-  }, [quizSettings.questionCount, quizSettings.difficulty, quizSettings.category]);
+  }, [quizSettings.questionCount, quizSettings.difficulty, quizSettings.category, quizSettings.type]);
 
   // Gérer la réponse à une question
   const handleAnswer = useCallback((isCorrect: boolean, timeSpent: number) => {
@@ -241,7 +264,45 @@ export default function Quiz() {
           <p className="text-red-400 mb-6">{error}</p>
           <div className="space-y-3">
             <button
-              onClick={() => window.location.reload()}
+              onClick={() => {
+                setError('');
+                setLoading(true);
+                // Recharger les questions
+                const loadQuestions = async () => {
+                  try {
+                    const params: QuizParams = {
+                      amount: quizSettings.questionCount,
+                      difficulty: quizSettings.difficulty,
+                      category: quizSettings.category,
+                      type: quizSettings.type === 'mixed' ? undefined : quizSettings.type,
+                    };
+
+                    const questions = await fetchQuizQuestionsWithRetry(params);
+                    
+                    setQuizState(prev => ({
+                      ...prev,
+                      questions,
+                      startTime: Date.now(),
+                    }));
+                  } catch (err) {
+                    console.error('Erreur lors du rechargement:', err);
+                    let errorMessage = 'Erreur lors du chargement des questions';
+                    if (err instanceof Error) {
+                      if (err.message.includes('429') || err.message.includes('Too Many Requests')) {
+                        errorMessage = 'Trop de requêtes vers le serveur. Veuillez patienter quelques instants et réessayer.';
+                      } else if (err.message.includes('Pas assez de questions')) {
+                        errorMessage = 'Pas assez de questions disponibles pour ces critères. Essayez avec d\'autres paramètres.';
+                      } else {
+                        errorMessage = err.message;
+                      }
+                    }
+                    setError(errorMessage);
+                  } finally {
+                    setLoading(false);
+                  }
+                };
+                loadQuestions();
+              }}
               className="w-full bg-indigo-600 text-white px-6 py-3 hover:bg-indigo-700 transition-colors font-medium"
             >
               Réessayer
