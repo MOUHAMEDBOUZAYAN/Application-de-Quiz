@@ -97,7 +97,7 @@ export default function Question({
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [isAnswered, isTimeUp, shuffledAnswers, showHints]);
 
-  const handleAnswer = useCallback((answer: string, index: number) => {
+  const handleAnswer = useCallback((answer: string, _index: number) => {
     if (isAnswered || isTimeUp) return;
     
     setSelectedAnswer(answer);

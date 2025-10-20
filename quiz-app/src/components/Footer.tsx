@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
 import { 
   FaGithub, FaLinkedin, FaTwitter, FaQuestionCircle, FaTrophy, 
-  FaBook, FaHome, FaChartBar, FaBrain, FaRocket, FaHeart
+  FaHome, FaChartBar, FaBrain
 } from 'react-icons/fa';
 import { 
-  FiMail, FiPhone, FiMapPin, FiArrowUp, FiUsers
+  FiMail, FiPhone, FiMapPin
 } from 'react-icons/fi';
 
 export default function Footer() {
@@ -22,9 +21,6 @@ export default function Footer() {
     }
   };
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
 
   // Navigation simplifiée
   const navigationLinks = [
@@ -176,14 +172,6 @@ export default function Footer() {
       </div>
 
       {/* Bouton Retour en haut */}
-      <motion.button
-        onClick={scrollToTop}
-        className="fixed bottom-8 right-8 w-12 h-12 bg-blue-600 hover:bg-blue-700 flex items-center justify-center text-white shadow-lg transition-all z-50"
-        whileHover={{ scale: 1.1, y: -2 }}
-        whileTap={{ scale: 0.9 }}
-      >
-        <FiArrowUp className="text-lg" />
-      </motion.button>
     </footer>
   );
 }

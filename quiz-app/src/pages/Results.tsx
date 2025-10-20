@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import useLocalStorage, { useUserStats } from '../hooks/useLocalStorage';
-import { useTheme, useThemeClasses } from '../contexts/ThemeContext';
+// import { useTheme, useThemeClasses } from '../contexts/ThemeContext';
 import { 
   FiHome, FiRepeat, FiShare2, FiDownload, FiTrendingUp, 
   FiClock, FiTarget, FiUsers, FiActivity
@@ -28,7 +28,7 @@ interface ResultsState {
 export default function Results() {
   const location = useLocation();
   const navigate = useNavigate();
-  const themeClasses = useThemeClasses();
+  // const themeClasses = useThemeClasses();
   const { stats, updateStats } = useUserStats();
   const [name] = useLocalStorage('quizUserName', '');
   const [showConfetti, setShowConfetti] = useState(false);
@@ -184,7 +184,7 @@ export default function Results() {
   const currentAnalysisData = getPerformanceAnalysis();
 
   return (
-    <div className={`min-h-screen relative overflow-hidden ${themeClasses.bgGradient}`}>
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       {/* Effets de confettis */}
       <AnimatePresence>
         {showConfetti && (
@@ -256,7 +256,7 @@ export default function Results() {
         >
           {/* Header principal */}
           <motion.div 
-            className={`${themeClasses.bgCard} rounded-3xl ${themeClasses.shadow} border ${themeClasses.border} overflow-hidden mb-8`}
+            className="bg-slate-800 shadow-xl border border-slate-700 overflow-hidden mb-8"
             whileHover={{ scale: 1.01 }}
           >
             <div className={`bg-gradient-to-r ${getResultColor()} p-8 text-center relative overflow-hidden`}>
@@ -348,13 +348,13 @@ export default function Results() {
             <div className="lg:col-span-2 space-y-6">
               {/* Analyses de performance */}
               <motion.div 
-                className={`${themeClasses.bgCard} rounded-2xl ${themeClasses.shadow} border ${themeClasses.border} p-6`}
+                className="bg-slate-800 shadow-xl border border-slate-700 p-6"
                 initial={{ opacity: 0, x: -30 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.8 }}
               >
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className={`text-2xl font-bold ${themeClasses.textPrimary} flex items-center gap-3`}>
+                  <h2 className="text-2xl font-bold text-white flex items-center gap-3">
                     <FiBarChart2 className="text-indigo-500" />
                     Analyse Détaillée
                   </h2>
@@ -368,7 +368,7 @@ export default function Results() {
                         className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                           currentAnalysis === index
                             ? 'bg-indigo-500 text-white'
-                            : `${themeClasses.textSecondary} hover:bg-indigo-100 dark:hover:bg-indigo-900/30`
+                            : 'text-slate-300 hover:bg-indigo-900/30'
                         }`}
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
@@ -390,11 +390,11 @@ export default function Results() {
                     {currentAnalysisData.data.map((item, index) => (
                       <motion.div
                         key={index}
-                        className={`p-4 rounded-xl ${themeClasses.bgTertiary} border ${themeClasses.border} group`}
+                        className="p-4 bg-slate-700/50 border border-slate-600 group"
                         whileHover={{ scale: 1.02, y: -2 }}
                       >
                         <div className="flex justify-between items-center">
-                          <span className={`text-sm ${themeClasses.textMuted}`}>
+                          <span className="text-sm text-slate-400">
                             {item.label}
                           </span>
                           <motion.span 
@@ -413,12 +413,12 @@ export default function Results() {
 
               {/* Métriques de temps */}
               <motion.div 
-                className={`${themeClasses.bgCard} rounded-2xl ${themeClasses.shadow} border ${themeClasses.border} p-6`}
+                className="bg-slate-800 shadow-xl border border-slate-700 p-6"
                 initial={{ opacity: 0, x: -30 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 1 }}
               >
-                <h3 className={`text-xl font-bold ${themeClasses.textPrimary} mb-6 flex items-center gap-3`}>
+                <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-3">
                   <FiClock className="text-purple-500" />
                   Analyse du Temps
                 </h3>
@@ -431,7 +431,7 @@ export default function Results() {
                   ].map((metric, index) => (
                     <motion.div
                       key={index}
-                      className={`p-4 rounded-xl ${themeClasses.bgSecondary} text-center group`}
+                      className="p-4 bg-slate-700 text-center group"
                       whileHover={{ scale: 1.05 }}
                     >
                       <motion.div 
@@ -441,10 +441,10 @@ export default function Results() {
                       >
                         <metric.icon />
                       </motion.div>
-                      <div className={`text-lg font-bold ${themeClasses.textPrimary}`}>
+                      <div className="text-lg font-bold text-white">
                         {metric.value}
                       </div>
-                      <div className={`text-sm ${themeClasses.textMuted}`}>
+                      <div className="text-sm text-slate-400">
                         {metric.label}
                       </div>
                     </motion.div>
@@ -455,12 +455,12 @@ export default function Results() {
               {/* Achievements débloqués */}
               {achievements.length > 0 && (
                 <motion.div 
-                  className={`${themeClasses.bgCard} rounded-2xl ${themeClasses.shadow} border ${themeClasses.border} p-6`}
+                  className="bg-slate-800 shadow-xl border border-slate-700 p-6"
                   initial={{ opacity: 0, x: -30 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 1.2 }}
                 >
-                  <h3 className={`text-xl font-bold ${themeClasses.textPrimary} mb-6 flex items-center gap-3`}>
+                  <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-3">
                     <FaTrophy className="text-yellow-500" />
                     Achievements Débloqués
                   </h3>
@@ -501,12 +501,12 @@ export default function Results() {
             <div className="space-y-6">
               {/* Actions rapides */}
               <motion.div 
-                className={`${themeClasses.bgCard} rounded-2xl ${themeClasses.shadow} border ${themeClasses.border} p-6`}
+                className="bg-slate-800 shadow-xl border border-slate-700 p-6"
                 initial={{ opacity: 0, x: 30 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.9 }}
               >
-                <h3 className={`text-xl font-bold ${themeClasses.textPrimary} mb-6 flex items-center gap-3`}>
+                <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-3">
                   <FiZap className="text-indigo-500" />
                   Actions
                 </h3>
@@ -524,7 +524,7 @@ export default function Results() {
 
                   <motion.button
                     onClick={() => navigate('/')}
-                    className={`w-full flex items-center justify-center gap-3 ${themeClasses.bgSecondary} ${themeClasses.textPrimary} border-2 border-indigo-500/30 px-6 py-3 rounded-xl hover:border-indigo-500 transition-all font-semibold`}
+                    className="w-full flex items-center justify-center gap-3 bg-slate-700 text-white border-2 border-indigo-500/30 px-6 py-3 hover:border-indigo-500 transition-all font-semibold"
                     whileHover={{ scale: 1.02, y: -2 }}
                     whileTap={{ scale: 0.98 }}
                   >
@@ -535,7 +535,7 @@ export default function Results() {
                   <div className="grid grid-cols-2 gap-3 mt-4">
                     <motion.button
                       onClick={shareResults}
-                      className={`flex items-center justify-center gap-2 ${themeClasses.bgTertiary} ${themeClasses.textSecondary} px-4 py-3 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-all`}
+                      className="flex items-center justify-center gap-2 bg-slate-700/50 text-slate-300 px-4 py-3 hover:bg-blue-900/30 transition-all"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
@@ -545,7 +545,7 @@ export default function Results() {
 
                     <motion.button
                       onClick={downloadResults}
-                      className={`flex items-center justify-center gap-2 ${themeClasses.bgTertiary} ${themeClasses.textSecondary} px-4 py-3 rounded-xl hover:bg-green-100 dark:hover:bg-green-900/30 transition-all`}
+                      className="flex items-center justify-center gap-2 bg-slate-700/50 text-slate-300 px-4 py-3 hover:bg-green-900/30 transition-all"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
@@ -558,12 +558,12 @@ export default function Results() {
 
               {/* Statistiques globales */}
               <motion.div 
-                className={`${themeClasses.bgCard} rounded-2xl ${themeClasses.shadow} border ${themeClasses.border} p-6`}
+                className="bg-slate-800 shadow-xl border border-slate-700 p-6"
                 initial={{ opacity: 0, x: 30 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 1.1 }}
               >
-                <h3 className={`text-xl font-bold ${themeClasses.textPrimary} mb-6 flex items-center gap-3`}>
+                <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-3">
                   <FiTrendingUp className="text-green-500" />
                   Vos Statistiques
                 </h3>
@@ -577,16 +577,16 @@ export default function Results() {
                   ].map((stat, index) => (
                     <motion.div
                       key={index}
-                      className={`flex items-center justify-between p-3 rounded-lg ${themeClasses.bgTertiary} group`}
+                      className="flex items-center justify-between p-3 bg-slate-700/50 group"
                       whileHover={{ x: 4 }}
                     >
                       <div className="flex items-center gap-3">
                         <stat.icon className={`text-lg ${stat.color} group-hover:scale-110 transition-transform`} />
-                        <span className={`text-sm ${themeClasses.textSecondary}`}>
+                        <span className="text-sm text-slate-300">
                           {stat.label}
                         </span>
                       </div>
-                      <span className={`font-bold ${themeClasses.textPrimary}`}>
+                      <span className="font-bold text-white">
                         {stat.value}
                       </span>
                     </motion.div>
@@ -596,12 +596,12 @@ export default function Results() {
 
               {/* Recommandations */}
               <motion.div 
-                className={`${themeClasses.bgCard} rounded-2xl ${themeClasses.shadow} border ${themeClasses.border} p-6`}
+                className="bg-slate-800 shadow-xl border border-slate-700 p-6"
                 initial={{ opacity: 0, x: 30 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 1.3 }}
               >
-                <h3 className={`text-xl font-bold ${themeClasses.textPrimary} mb-4 flex items-center gap-3`}>
+                <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-3">
                   <FaLightbulb className="text-yellow-500" />
                   Suggestions
                 </h3>

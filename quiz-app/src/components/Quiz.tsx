@@ -7,10 +7,9 @@ import ProgressBar from './ProgressBar';
 import { fetchQuizQuestionsWithRetry, QuizParams } from '../utils/api';
 import { QuestionState } from '../types/quizTypes';
 import { 
-  FiUser, FiAward, FiPause, FiPlay, FiHome, FiSettings,
+  FiAward, FiPause, FiPlay, FiHome,
   FiVolume2, FiVolumeX, FiRefreshCw, FiEye, FiEyeOff
 } from 'react-icons/fi';
-import { FaBrain, FaLightbulb } from 'react-icons/fa';
 
 interface QuizState {
   questions: QuestionState[];
@@ -33,7 +32,7 @@ interface QuizSettings {
 
 export default function Quiz() {
   const [name] = useLocalStorage('quizUserName', '');
-  const { stats, updateStats } = useUserStats();
+  const { updateStats } = useUserStats();
   const [preferences] = useUserPreferences();
   const navigate = useNavigate();
   const location = useLocation();
@@ -53,7 +52,7 @@ export default function Quiz() {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [showSettings, setShowSettings] = useState(false);
+  // const [showSettings, setShowSettings] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(preferences.soundEnabled);
   const [hintsEnabled, setHintsEnabled] = useState(preferences.showHints);
 
